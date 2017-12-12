@@ -11,8 +11,8 @@ export default class BlockInfo extends React.Component {
         <p>Block hash: {blockInfo.hash}</p>
         <p>Block number: {blockInfo.number}</p>
         <ul>
-          {blockInfo.transactions.map((txnInfo) =>
-              <li>
+          {blockInfo.transactions.map((txnInfo, i) =>
+              <li key={i}>
                 <BlockInfoTxn txnInfo={txnInfo} />
               </li>
             )}

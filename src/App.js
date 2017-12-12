@@ -31,7 +31,7 @@ class App extends Component {
             <Route exact path="/tx" component={Transactions} />
             <Route path="/tx/:txId" component={Transaction} />
             <Route exact path="/block" component={Blocks} />
-            <Route path="/block/:hash" component={Block} />
+            <Route path="/block/:blockNumber" component={Block} />
             <Route path="/address" component={Address} />
           </div>
         </ConnectedRouter>
