@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Web3 from "web3";
+import TransactionInfo from "./TransactionInfo";
 
 class Transaction extends React.Component {
   constructor() {
@@ -12,7 +13,7 @@ class Transaction extends React.Component {
 
   componentDidMount() {
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://node.blockfront.io:8545")
+      new Web3.providers.HttpProvider("http://pub-node1.etherscan.io:8545")
     );
     web3.eth.getTransaction(this.props.txId).then(tx => {
       this.setState({
@@ -29,7 +30,7 @@ class Transaction extends React.Component {
     return (
       <div>
         <p>Transaction ID: {txId}</p>
-        <div>{loading ? <p>Loading...</p> : <p>From: {txInfo.from}</p>}</div>
+        {loading ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
       </div>
     );
   }
