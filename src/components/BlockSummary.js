@@ -1,3 +1,5 @@
+import React from "react";
+
 export default class BlockSummary extends React.Component {
   render() {
     const { block } = this.props;

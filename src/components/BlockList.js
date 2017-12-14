@@ -1,3 +1,4 @@
+import React from "react";
 import BlockSummary from "./BlockSummary";
 
 export default class BlockList extends React.Component {

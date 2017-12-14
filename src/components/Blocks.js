@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import Web3 from "web3";
 import BlockList from "./BlockList";
 
 class Blocks extends React.Component {
@@ -36,14 +37,24 @@ class Blocks extends React.Component {
   }
 
   getPageOfBlockNumbers() {
-    const highBlockNumber = this.state.latestBlockNumber - (this.state.page * this.state.pageSize);
-    return new Array(this.state.pageSize).map((_, index) => highBlockNumber - index);
+    const { latestBlockNumber, page, pageSize } = this.state;
+    const highBlockNumber = latestBlockNumber - (page * pageSize);
+
+    let pageOfBlockNumbers = [];
+    let cursor = 0;
+
+    while (cursor < pageSize) {
+      pageOfBlockNumbers.push(highBlockNumber - cursor++);
+    }
+
+    return pageOfBlockNumbers;
   }
 
   render() {
+    const { blocks, loading } = this.state;
     return (
       <div>
-        <div>{loading ? <p>Loading...</p> : <BlockList blocks={this.state.blocks} />}</div>
+        <div>{loading ? <p>Loading...</p> : <BlockList blocks={blocks} />}</div>
       </div>
     )
   }
