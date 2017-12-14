@@ -7,7 +7,7 @@ export default class BlockList extends React.Component {
 
     return (
       <div>
-        {blocks.map(block => <BlockSummary block={block} />)}
+        {blocks.map((block, i) => <BlockSummary block={block} key={i} />)}
       </div>
     );
   }
