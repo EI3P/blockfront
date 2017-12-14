@@ -8,7 +8,7 @@ export default class BlockSummary extends React.Component {
     return (
       <div>
         <p>Block hash: {block.hash}</p>
-        <p>Block number: {block.number}</p>
+        <p>Block number: <a href={`/block/${block.number}`}>{block.number}</a></p>
       </div>
     );
   }
