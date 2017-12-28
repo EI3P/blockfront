@@ -5,7 +5,9 @@ import { ConnectedRouter } from "react-router-redux";
 import Transaction from "./components/Transaction";
 import Transactions from "./components/Transactions";
 import Block from "./components/Block";
+import Blocks from "./components/Blocks";
 import Address from "./components/Address";
+import Addresses from "./components/Addresses";
 import store, { history } from "./store";
 import "normalize.css";
 import "@blueprintjs/core/dist/blueprint.css";
@@ -29,8 +31,10 @@ class App extends Component {
             </header>
             <Route exact path="/tx" component={Transactions} />
             <Route path="/tx/:txId" component={Transaction} />
-            <Route path="/block" component={Block} />
-            <Route path="/address" component={Address} />
+            <Route exact path="/block" component={Blocks} />
+            <Route path="/block/:blockNumber" component={Block} />
+            <Route exact path="/address" component={Addresses} />
+            <Route path="/address/:addressId" component={Address} />
           </div>
         </ConnectedRouter>
       </Provider>
