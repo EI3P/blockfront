@@ -30,11 +30,10 @@ class App extends Component {
               <Link to="/block">Block</Link>
               <Link to="/address">Address</Link>
             </header>
-
             <Route exact path="/" component={Home} />
             <Route exact path="/tx" component={Transactions} />
             <Route path="/tx/:txId" component={Transaction} />
-            <Route exact path={process.env.PUBLIC_URL + "/block"} component={Blocks} />
+            <Route exact path="/block" component={Blocks} />
             <Route path="/block/:blockNumber" component={Block} />
             <Route exact path="/address" component={Addresses} />
             <Route path="/address/:addressId" component={Address} />
