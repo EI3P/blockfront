@@ -1,7 +1,8 @@
 {
   "name": "blockfront",
   "version": "0.1.0",
-  "private": true,
+  "private": "false",
+  "homepage": "http://blockfront.io",
   "dependencies": {
     "@blueprintjs/core": "^1.34.1",
     "autoprefixer": "7.1.6",
@@ -59,7 +60,9 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "prettier-watch": "onchange '**/*.js' -- prettier --write {{changed}}"
+    "prettier-watch": "onchange '**/*.js' -- prettier --write {{changed}}",
+    "predeploy": "node scripts/build.js",
+    "deploy": "gh-pages -d build"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -104,6 +107,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
+    "gh-pages": "^1.1.0",
     "onchange": "^3.3.0",
     "prettier": "1.9.1"
   }
