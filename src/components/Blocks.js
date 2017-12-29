@@ -10,7 +10,7 @@ class Blocks extends React.Component {
       loading: true,
       // FIXME: Set from query param
       // XXX: This should render as `page + 1`
-      page: 0, 
+      page: 0,
       pageSize: 15
     };
   }

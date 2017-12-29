@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
+import Home from "./components/Home";
 import Transaction from "./components/Transaction";
 import Transactions from "./components/Transactions";
 import Block from "./components/Block";
@@ -29,6 +30,8 @@ class App extends Component {
               <Link to="/block">Block</Link>
               <Link to="/address">Address</Link>
             </header>
+
+            <Route exact path="/" component={Home} />
             <Route exact path="/tx" component={Transactions} />
             <Route path="/tx/:txId" component={Transaction} />
             <Route exact path="/block" component={Blocks} />
