@@ -21,21 +21,25 @@ class Address extends React.Component {
   componentDidMount() {
     const { addressId } = this.props;
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://node.blockfront.io:8545")
+      new Web3.providers.HttpProvider("http://pub-node1.etherscan.io:8545")
     );
 
     Promise.all([
       web3.eth.getBalance(addressId, "latest"),
-      web3.eth.getTransactionCount(addressId, "latest"),
+      web3.eth.getPastLogs({
+        "fromBlock": "0x0",
+        "toBlock": "latest",
+        "address": addressId
+      }),
       web3.eth.getCode(addressId, "latest"),
-    ]).then(([balance, txCount, code]) => {
+    ]).then(([balance, transactions, code]) => {
       this.setState({
         loading: false,
         addressInfo: {
           id: addressId,
           balance,
           code,
-          txCount,
+          transactions,
         }
       });
     });

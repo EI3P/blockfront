@@ -12,7 +12,7 @@ class Addresses extends React.Component {
     this.state = {
       lastAddress: null,
       loading: true,
-      pageSize: 15
+      pageSize: 5
     };
   }
 
