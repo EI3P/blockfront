@@ -1,4 +1,6 @@
 import React from "react";
+import { push } from "react-router-redux";
+import store from "../store";
 
 // web3 has isAddress and isStrictAddress but does not expose isStrictAddress
 function isStrictAddress(value) {
@@ -43,7 +45,7 @@ export default class SearchBar extends React.Component {
     const result = this.search(query);
 
     if (result !== null) {
-      console.log(`Redirecting to ${result}`);
+      store.dispatch(push(result));
       this.setState({
         query: ""
       });
