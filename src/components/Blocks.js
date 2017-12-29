@@ -11,7 +11,7 @@ class Blocks extends React.Component {
       // FIXME: Set from query param
       // XXX: This should render as `page + 1`
       page: 0,
-      pageSize: 15
+      pageSize: 5
     };
   }
 
