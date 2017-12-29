@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 
 class Addresses extends React.Component {
   render() {
-    return "address";
+    return "addresses";
   }
 }
 
