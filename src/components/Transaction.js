@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import Web3 from "web3";
 import TransactionInfo from "./TransactionInfo";
+import { setTransaction } from "../actions";
+import store from "../store";
 
 class Transaction extends React.Component {
   constructor() {
@@ -12,32 +13,27 @@ class Transaction extends React.Component {
   }
 
   componentDidMount() {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://pub-node1.etherscan.io:8545")
-    );
-    web3.eth.getTransaction(this.props.txId).then(tx => {
-      this.setState({
-        txInfo: tx,
-        loading: false
-      });
-    });
+    store.dispatch(setTransaction(this.props.txId));
   }
 
   render() {
-    const { txId } = this.props;
-    const { loading, txInfo } = this.state;
+    const { txId, txInfo, txLoading } = this.props;
 
     return (
       <div>
         <p>Transaction ID: {txId}</p>
-        {loading ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
+        {txLoading ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { txId: ownProps.match.params.txId };
+  return {
+    txId: ownProps.match.params.txId,
+    txInfo: state.transaction,
+    txLoading: state.transactionLoading
+  };
 };
 
 export default connect(mapStateToProps, null)(Transaction);
