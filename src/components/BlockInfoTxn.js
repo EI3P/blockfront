@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Web3 from "web3";
+import config from "../config";
 
 export default class BlockInfoTxn extends React.Component {
   render() {
     const { txnInfo } = this.props;
-    const web3 = new Web3();
+    const { web3 } = config;
 
     return (
       <div>

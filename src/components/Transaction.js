@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import Web3 from "web3";
 import TransactionInfo from "./TransactionInfo";
+import config from "../config";
 
 class Transaction extends React.Component {
   constructor() {
@@ -12,9 +12,7 @@ class Transaction extends React.Component {
   }
 
   componentDidMount() {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://pub-node1.etherscan.io:8545")
-    );
+    const { web3 } = config;
     web3.eth.getTransaction(this.props.txId).then(tx => {
       this.setState({
         txInfo: tx,

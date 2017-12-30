@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import Web3 from "web3";
 import BlockList from "./BlockList";
+import config from "../config";
 
 class Blocks extends React.Component {
   constructor() {
@@ -16,9 +16,7 @@ class Blocks extends React.Component {
   }
 
   componentDidMount() {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://node.blockfront.io:8545")
-    );
+    const { web3 } = config;
     web3.eth.getBlock("latest", false).then(block => {
       this.setState({
         latestBlockNumber: block.number
