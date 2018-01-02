@@ -27,7 +27,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     txId: ownProps.match.params.txId,
     txInfo: state.transactions.transaction,
-    txFetching: state.transactions.isFetching
+    txFetching: state.transactions.txIsFetching
   };
 };
 
