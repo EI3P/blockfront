@@ -9,6 +9,7 @@ import Block from "./components/Block";
 import Blocks from "./components/Blocks";
 import Address from "./components/Address";
 import Addresses from "./components/Addresses";
+import SearchBar from "./components/SearchBar";
 import store, { history } from "./store";
 import "normalize.css";
 import "@blueprintjs/core/dist/blueprint.css";
@@ -29,6 +30,7 @@ class App extends Component {
               <Link to="/tx">Tx</Link>
               <Link to="/block">Block</Link>
               <Link to="/address">Address</Link>
+              <SearchBar />
             </header>
             <Route exact path="/" component={Home} />
             <Route exact path="/tx" component={Transactions} />
