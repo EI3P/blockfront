@@ -27,10 +27,18 @@ class App extends Component {
           <div className="App">
             <header className="App-header">
               <h1 className="App-title">Blockfront</h1>
-              <Link to="/tx">Tx</Link>
-              <Link to="/block">Block</Link>
-              <Link to="/address">Address</Link>
+              <Link to="/tx">
+                <b>Tx </b>
+              </Link>
+              <Link to="/block">
+                <b>Block </b>
+              </Link>
+              <Link to="/address">
+                <b>Address </b>
+              </Link>
+              <br />
               <SearchBar />
+              <br />
             </header>
             <Route exact path="/" component={Home} />
             <Route exact path="/tx" component={Transactions} />
