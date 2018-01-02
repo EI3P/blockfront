@@ -1,28 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
 import TransactionInfo from "./TransactionInfo";
-import { setTransaction } from "../actions";
+import { fetchTransaction } from "../actions";
 import store from "../store";
 
 class Transaction extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true
-    };
-  }
-
   componentDidMount() {
-    store.dispatch(setTransaction(this.props.txId));
+    store.dispatch(fetchTransaction(this.props.txId));
   }
 
   render() {
-    const { txId, txInfo, txLoading } = this.props;
+    const { txId, txInfo, txFetching } = this.props;
 
     return (
       <div>
-        <p>Transaction ID: {txId}</p>
-        {txLoading ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
+        <p>
+          Transaction ID: <b>{txId}</b>
+        </p>
+        {txFetching ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
       </div>
     );
   }
@@ -31,8 +26,8 @@ class Transaction extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     txId: ownProps.match.params.txId,
-    txInfo: state.transaction,
-    txLoading: state.transactionLoading
+    txInfo: state.transactions.transaction,
+    txFetching: state.transactions.isFetching
   };
 };
 

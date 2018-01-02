@@ -1,25 +1,10 @@
 import { combineReducers } from "redux";
 import { routerReducer } from "react-router-redux";
-import {
-  SET_TRANSACTION,
-  REQUEST_TRANSACTION,
-  RECEIVE_TRANSACTION
-} from "../actions";
-
-// tx route
-
-function tx(state = {}, action) {
-  switch (action.type) {
-    case SET_TRANSACTION:
-      return { ...state };
-    default:
-      return state;
-  }
-}
+import { REQUEST_TRANSACTION, RECEIVE_TRANSACTION } from "../actions";
 
 // transaction data
 
-function transactions(state = { isFetching: false }, action) {
+function transactions(state = { isFetching: true }, action) {
   switch (action.type) {
     case REQUEST_TRANSACTION:
       return { ...state, isFetching: true };
@@ -32,6 +17,5 @@ function transactions(state = { isFetching: false }, action) {
 
 export default combineReducers({
   routing: routerReducer,
-  tx,
   transactions
 });
