@@ -1,41 +1,34 @@
 import React from "react";
 import { connect } from "react-redux";
 import TransactionInfo from "./TransactionInfo";
-import config from "../config";
+import { fetchTransaction } from "../actions";
+import store from "../store";
 
 class Transaction extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true
-    };
-  }
-
   componentDidMount() {
-    const { web3 } = config;
-    web3.eth.getTransaction(this.props.txId).then(tx => {
-      this.setState({
-        txInfo: tx,
-        loading: false
-      });
-    });
+    store.dispatch(fetchTransaction(this.props.txId));
   }
 
   render() {
-    const { txId } = this.props;
-    const { loading, txInfo } = this.state;
+    const { txId, txInfo, txFetching } = this.props;
 
     return (
       <div>
-        <p>Transaction ID: {txId}</p>
-        {loading ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
+        <p>
+          Transaction ID: <b>{txId}</b>
+        </p>
+        {txFetching ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { txId: ownProps.match.params.txId };
+  return {
+    txId: ownProps.match.params.txId,
+    txInfo: state.transactions.transaction,
+    txFetching: state.transactions.isFetching
+  };
 };
 
 export default connect(mapStateToProps, null)(Transaction);

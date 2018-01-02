@@ -17,26 +17,34 @@ class Blocks extends React.Component {
 
   componentDidMount() {
     const { web3 } = config;
-    web3.eth.getBlock("latest", false).then(block => {
-      this.setState({
-        latestBlockNumber: block.number
+    web3.eth
+      .getBlock("latest", false)
+      .then(block => {
+        this.setState({
+          latestBlockNumber: block.number
+        });
+        return block.number;
+      })
+      .then(latestBlockNumber => {
+        // FIXME this will be a reducer
+        let pageOfBlockNumbers = this.getPageOfBlockNumbers();
+        return Promise.all(
+          pageOfBlockNumbers.map(blockNumber =>
+            web3.eth.getBlock(blockNumber, true)
+          )
+        );
+      })
+      .then(blocks => {
+        this.setState({
+          blocks: blocks,
+          loading: false
+        });
       });
-      return block.number;
-    }).then((latestBlockNumber) => {
-      // FIXME this will be a reducer
-      let pageOfBlockNumbers = this.getPageOfBlockNumbers();
-      return Promise.all(pageOfBlockNumbers.map((blockNumber) => web3.eth.getBlock(blockNumber, true)))
-    }).then(blocks => {
-      this.setState({
-        blocks: blocks,
-        loading: false
-      });
-    });
   }
 
   getPageOfBlockNumbers() {
     const { latestBlockNumber, page, pageSize } = this.state;
-    const highBlockNumber = latestBlockNumber - (page * pageSize);
+    const highBlockNumber = latestBlockNumber - page * pageSize;
 
     let pageOfBlockNumbers = [];
     let cursor = 0;
@@ -54,7 +62,7 @@ class Blocks extends React.Component {
       <div>
         <div>{loading ? <p>Loading...</p> : <BlockList blocks={blocks} />}</div>
       </div>
-    )
+    );
   }
 }
 
