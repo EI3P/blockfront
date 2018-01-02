@@ -19,7 +19,7 @@ export default class SearchBar extends React.Component {
   constructor() {
     super();
     this.state = {
-      query: "",
+      query: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,7 +29,12 @@ export default class SearchBar extends React.Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input style={{width: "270px"}} placeholder="Block # | Transaction hash | Address hash" value={this.state.query} onChange={this.handleChange} />
+          <input
+            style={{ width: "270px" }}
+            placeholder="Block # | Transaction hash | Address hash"
+            value={this.state.query}
+            onChange={this.handleChange}
+          />
           <input type="submit" value="Search" />
         </form>
       </div>
@@ -37,7 +42,7 @@ export default class SearchBar extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({query: event.target.value});
+    this.setState({ query: event.target.value });
   }
 
   handleSubmit(event) {
@@ -60,11 +65,9 @@ export default class SearchBar extends React.Component {
 
     if (isStrictAddress(query)) {
       result = `/address/${query}`;
-    }
-    else if (isStrictTransaction(query)) {
+    } else if (isStrictTransaction(query)) {
       result = `/tx/${query}`;
-    }
-    else if (isBlock(query)) {
+    } else if (isBlock(query)) {
       result = `/block/${query}`;
     }
 

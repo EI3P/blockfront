@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Web3 from "web3";
+import config from "../config";
 
 // We want something like `BlockInfoTxn` here for each inbound/outbound txn
 export default class AddressInfo extends React.Component {
   render() {
     const { addressInfo } = this.props;
-    const web3 = new Web3();
+    const { web3 } = config;
 
     return (
       <div>

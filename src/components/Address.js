@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import Web3 from "web3";
 import AddressInfo from "./AddressInfo";
+import config from "../config";
 
 // XXX How to get inbound and outbound transactions ?
 // I think we will want our own tables of blocks and
@@ -20,9 +20,7 @@ class Address extends React.Component {
 
   componentDidMount() {
     const { addressId } = this.props;
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://pub-node1.etherscan.io:8545")
-    );
+    const { web3 } = config;
 
     Promise.all([
       web3.eth.getBalance(addressId, "latest"),

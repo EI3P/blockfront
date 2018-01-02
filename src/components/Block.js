@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import Web3 from "web3";
 
-import BlockInfo from "./BlockInfo"
+import BlockInfo from "./BlockInfo";
+import config from "../config";
 
 class Block extends React.Component {
   constructor() {
@@ -13,9 +13,7 @@ class Block extends React.Component {
   }
 
   componentDidMount() {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://node.blockfront.io:8545")
-    );
+    const { web3 } = config;
     web3.eth.getBlock(this.props.blockNumber, true).then(block => {
       this.setState({
         blockInfo: block,
