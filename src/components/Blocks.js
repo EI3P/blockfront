@@ -8,7 +8,7 @@ class Blocks extends React.Component {
     super();
     this.state = {
       loading: true,
-      // FIXME: Set from query param
+      // FIXME: Set from redux
       // XXX: This should render as `page + 1`
       page: 0,
       pageSize: 5
