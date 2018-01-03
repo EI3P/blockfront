@@ -30,7 +30,7 @@ class Address extends React.Component {
     let highBlockNumber = latestBlockNumber - page * pageSize;
     highBlockNumber = highBlockNumber > 0 ? highBlockNumber : pageSize;
 
-    let lowBlockNumber = highBlockNumber > pageSize ? (highBlockNumber - pageSize) : "0";
+    let lowBlockNumber = highBlockNumber > pageSize ? (highBlockNumber - pageSize) : 0;
 
     return web3.eth.getPastLogs({
       "fromBlock": String(lowBlockNumber),
