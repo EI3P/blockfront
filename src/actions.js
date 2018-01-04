@@ -4,6 +4,9 @@ export const REQUEST_TRANSACTION = "REQUEST_TRANSACTION";
 export const RECEIVE_TRANSACTION = "RECEIVE_TRANSACTION";
 export const REQUEST_TRANSACTIONS_FOR_BLOCK = "REQUEST_TRANSACTIONS_FOR_BLOCK";
 export const RECEIVE_TRANSACTIONS_FOR_BLOCK = "RECEIVE_TRANSACTIONS_FOR_BLOCK";
+export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
+export const UPDATE_SEARCH_QUERY = "UPDATE_SEARCH_QUERY";
+export const INVALID_SEARCH_QUERY = "INVALID_SEARCH_QUERY";
 
 // TODO: set this dynamically
 const web3 = new Web3(
@@ -56,4 +59,23 @@ export function fetchTransactionsForBlock(id = "latest") {
       dispatch(receiveTransactionsForBlock(id, block.transactions));
     });
   };
+}
+
+export function clearSearchQuery() {
+  return {
+    type: CLEAR_SEARCH_QUERY,
+  }
+}
+
+export function updateSearchQuery(query) {
+  return {
+    type: UPDATE_SEARCH_QUERY,
+    query,
+  }
+}
+
+export function invalidSearchQuery() {
+  return {
+    type: INVALID_SEARCH_QUERY,
+  }
 }
