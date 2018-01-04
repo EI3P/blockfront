@@ -5,6 +5,8 @@ import {
   RECEIVE_TRANSACTION,
   REQUEST_TRANSACTIONS_FOR_BLOCK,
   RECEIVE_TRANSACTIONS_FOR_BLOCK,
+  REQUEST_BLOCK,
+  RECEIVE_BLOCK,
   CLEAR_SEARCH_QUERY,
   UPDATE_SEARCH_QUERY,
   INVALID_SEARCH_QUERY,
@@ -39,6 +41,26 @@ function transactions(
   }
 }
 
+// blocks data
+function blocks(
+  state = {
+    blockIsFetching: true,
+    block: null,
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUEST_BLOCK:
+      return { ...state, blockIsFetching: true };
+    case RECEIVE_BLOCK:
+      return { ...state, blockIsFetching: false, block: action.block };
+    default:
+      return state;
+  }
+}
+
+// site search
+
 function search(state={ query: "", validQuery: true}, action) {
   switch(action.type) {
     case UPDATE_SEARCH_QUERY:
@@ -65,6 +87,7 @@ function search(state={ query: "", validQuery: true}, action) {
 
 export default combineReducers({
   routing: routerReducer,
+  blocks,
   transactions,
   search
 });

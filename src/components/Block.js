@@ -1,40 +1,38 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import BlockInfo from "./BlockInfo";
-import config from "../config";
+import { fetchBlock } from "../actions";
+import store from "../store";
+
 
 class Block extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true
-    };
+  componentDidMount() {
+    store.dispatch(fetchBlock(this.props.blockNumber));
   }
 
-  componentDidMount() {
-    const { web3 } = config;
-    web3.eth.getBlock(this.props.blockNumber, true).then(block => {
-      this.setState({
-        blockInfo: block,
-        loading: false
-      });
-    });
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      store.dispatch(fetchBlock(nextProps.blockNumber));
+    }
   }
 
   render() {
-    const { loading, blockInfo } = this.state;
+    const { blockFetching, blockInfo } = this.props;
 
     return (
       <div>
-        <div>{loading ? <p>Loading...</p> : <BlockInfo blockInfo={blockInfo} />}</div>
+        <div>{blockFetching ? <p>Loading...</p> : <BlockInfo blockInfo={blockInfo} />}</div>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { blockNumber: ownProps.match.params.blockNumber };
+  return {
+    blockNumber: ownProps.match.params.blockNumber,
+    blockInfo: state.blocks.block,
+    blockFetching: state.blocks.blockIsFetching
+  };
 };
 
 export default connect(mapStateToProps, null)(Block);
