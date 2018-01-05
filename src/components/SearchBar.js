@@ -1,40 +1,36 @@
 import React from "react";
+import { connect } from "react-redux";
 import { push } from "react-router-redux";
+import {
+  clearSearchQuery,
+  updateSearchQuery,
+  invalidSearchQuery,
+} from "../actions";
 import store from "../store";
+import { isStrictAddress, isStrictTransaction, isBlock } from "../util";
 
-// web3 has isAddress and isStrictAddress but does not expose isStrictAddress
-function isStrictAddress(value) {
-  return /^0x[0-9a-f]{40}$/i.test(value);
-}
-
-function isStrictTransaction(value) {
-  return /^0x[0-9a-f]{64}$/i.test(value);
-}
-
-function isBlock(value) {
-  return !isNaN(parseInt(value, 10));
-}
-
-export default class SearchBar extends React.Component {
+class SearchBar extends React.Component {
   constructor() {
     super();
-    this.state = {
-      query: ""
-    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   render() {
+    const { query, validQuery } = this.props;
+
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <input
             style={{ width: "270px" }}
             placeholder="Block # | Transaction hash | Address hash"
-            value={this.state.query}
+            value={query}
             onChange={this.handleChange}
           />
+          <div>
+            {validQuery || <strong style={{ color: "red" }}>Invalid input, please use strict formatting for hashes.</strong>}
+          </div>
           <input type="submit" value="Search" />
         </form>
       </div>
@@ -42,35 +38,34 @@ export default class SearchBar extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({ query: event.target.value });
+    store.dispatch(updateSearchQuery(event.target.value));
   }
 
   handleSubmit(event) {
-    const query = this.state.query;
-    const result = this.search(query);
-
-    if (result !== null) {
-      store.dispatch(push(result));
-      this.setState({
-        query: ""
-      });
-    }
-
     event.preventDefault();
-  }
 
-  search(query) {
-    // FIXME : Handle non-strict hashes that are missing 0x
-    let result = null;
+    const { query } = this.props;
 
     if (isStrictAddress(query)) {
-      result = `/address/${query}`;
+      store.dispatch(clearSearchQuery());
+      store.dispatch(push(`/address/${query}`));
     } else if (isStrictTransaction(query)) {
-      result = `/tx/${query}`;
+      store.dispatch(clearSearchQuery());
+      store.dispatch(push(`/tx/${query}`));
     } else if (isBlock(query)) {
-      result = `/block/${query}`;
+      store.dispatch(clearSearchQuery());
+      store.dispatch(push(`/block/${query}`));
+    } else  {
+      store.dispatch(invalidSearchQuery())
     }
-
-    return result;
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    query: state.search.query,
+    validQuery: state.search.validQuery
+  };
+};
+
+export default connect(mapStateToProps, null)(SearchBar);

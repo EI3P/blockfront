@@ -9,6 +9,12 @@ class Transaction extends React.Component {
     store.dispatch(fetchTransaction(this.props.txId));
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      store.dispatch(fetchTransaction(nextProps.txId));
+    }
+  }
+
   render() {
     const { txId, txInfo, txFetching } = this.props;
 
