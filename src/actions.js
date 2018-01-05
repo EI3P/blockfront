@@ -111,7 +111,7 @@ export function fetchPageOfBlocks(pageNumber) {
           });
         })
       ).then(pageOfBlocks => {
-        dispatch(receivePageOfBlocks(pageOfBlocks));
+        dispatch(receivePageOfBlocks());
       });
     });
   };
