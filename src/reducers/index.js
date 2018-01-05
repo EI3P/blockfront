@@ -50,7 +50,7 @@ function blocks(
     blockIsFetching: true,
     blocksAreFetching: true,
     block: null,
-    pageOfBlocks: null
+    pageOfBlocks: []
   },
   action
 ) {
@@ -71,14 +71,14 @@ function blocks(
       return { ...state, blocksAreFetching: false };
     case RECEIVE_BLOCK_IN_PAGE:
       const blockIndex = state.pageOfBlocks.findIndex(block => {
-        return block.blockNumber == action.blockNumber
+        return block.blockNumber === action.blockNumber
       });
       return {
         ...state,
         pageOfBlocks: [
-          state.pageOfBlocks.slice(0, blockIndex),
-          { blockNumber, blockIsFetching: false, block: action.block },
-          state.pageOfBlocks.slice(blockIndex + 1)
+          ...state.pageOfBlocks.slice(0, blockIndex),
+          { blockNumber: action.blockNumber, blockIsFetching: false, block: action.block },
+          ...state.pageOfBlocks.slice(blockIndex + 1)
         ]
       };
     default:

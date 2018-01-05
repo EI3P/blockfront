@@ -98,14 +98,10 @@ export function receiveBlock(blockNumber, block) {
 export function fetchPageOfBlocks(pageNumber) {
   return function (dispatch) {
     return web3.eth.getBlock("latest", false).then(block => {
-      // FIXME Where do i go
-      function getPageOfBlockNumbers() {
-        const PAGE_SIZE = 5;
-        const highBlockNumber = block.number - pageNumber * PAGE_SIZE;
-        return Array(PAGE_SIZE).fill(null).map((_, i) => highBlockNumber - i);
-      }
+      const PAGE_SIZE = 5;
+      const highBlockNumber = block.number - pageNumber * PAGE_SIZE;
 
-      pageOfBlockNumbers = getPageOfBlockNumbers();
+      const pageOfBlockNumbers = Array(PAGE_SIZE).fill(null).map((_, i) => highBlockNumber - i);
       dispatch(requestPageOfBlocks(pageOfBlockNumbers));
 
       return Promise.all(
