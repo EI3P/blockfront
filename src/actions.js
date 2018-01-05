@@ -9,6 +9,9 @@ export const RECEIVE_TRANSACTIONS_FOR_BLOCK = "RECEIVE_TRANSACTIONS_FOR_BLOCK";
 // Blocks
 export const REQUEST_BLOCK = "REQUEST_BLOCK";
 export const RECEIVE_BLOCK = "RECEIVE_BLOCK";
+export const REQUEST_PAGE_OF_BLOCKS = "REQUEST_PAGE_OF_BLOCKS";
+export const RECEIVE_PAGE_OF_BLOCKS = "RECEIVE_PAGE_OF_BLOCKS";
+export const RECEIVE_BLOCK_IN_PAGE = "RECEIVE_BLOCK_IN_PAGE";
 
 // Search
 export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
@@ -87,6 +90,49 @@ export function requestBlock(blockNumber) {
 export function receiveBlock(blockNumber, block) {
   return {
     type: RECEIVE_BLOCK,
+    blockNumber,
+    block
+  };
+}
+
+export function fetchPageOfBlocks(pageNumber) {
+  return function (dispatch) {
+    return web3.eth.getBlock("latest", false).then(block => {
+      const PAGE_SIZE = 5;
+      const highBlockNumber = block.number - pageNumber * PAGE_SIZE;
+
+      const pageOfBlockNumbers = Array(PAGE_SIZE).fill(null).map((_, i) => highBlockNumber - i);
+      dispatch(requestPageOfBlocks(pageOfBlockNumbers));
+
+      return Promise.all(
+        pageOfBlockNumbers.map(blockNumber => {
+          return web3.eth.getBlock(String(blockNumber), true).then((blockInPage) => {
+            dispatch(receiveBlockInPage(blockNumber, blockInPage));
+          });
+        })
+      ).then(pageOfBlocks => {
+        dispatch(receivePageOfBlocks());
+      });
+    });
+  };
+}
+
+export function requestPageOfBlocks(blockNumbers) {
+  return {
+    type: REQUEST_PAGE_OF_BLOCKS,
+    blockNumbers,
+  };
+}
+
+export function receivePageOfBlocks() {
+  return {
+    type: RECEIVE_PAGE_OF_BLOCKS,
+  };
+}
+
+export function receiveBlockInPage(blockNumber, block) {
+  return {
+    type: RECEIVE_BLOCK_IN_PAGE,
     blockNumber,
     block
   };

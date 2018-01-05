@@ -1,73 +1,56 @@
+import qs from "qs";
 import React from "react";
 import { connect } from "react-redux";
 import BlockList from "./BlockList";
-import config from "../config";
+import { fetchPageOfBlocks } from "../actions";
+import store from "../store";
 
 class Blocks extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-      // FIXME: Set from redux
-      // XXX: This should render as `page + 1`
-      page: 0,
-      pageSize: 5
-    };
-  }
 
   componentDidMount() {
-    const { web3 } = config;
-    web3.eth
-      .getBlock("latest", false)
-      .then(block => {
-        this.setState({
-          latestBlockNumber: block.number
-        });
-        return block.number;
-      })
-      .then(latestBlockNumber => {
-        // FIXME this will be a reducer
-        let pageOfBlockNumbers = this.getPageOfBlockNumbers();
-        return Promise.all(
-          pageOfBlockNumbers.map(blockNumber =>
-            web3.eth.getBlock(blockNumber, true)
-          )
-        );
-      })
-      .then(blocks => {
-        this.setState({
-          blocks: blocks,
-          loading: false
-        });
-      });
+    store.dispatch(fetchPageOfBlocks(this.getPageNumber()));
   }
 
-  getPageOfBlockNumbers() {
-    const { latestBlockNumber, page, pageSize } = this.state;
-    const highBlockNumber = latestBlockNumber - page * pageSize;
-
-    let pageOfBlockNumbers = [];
-    let cursor = 0;
-
-    while (cursor < pageSize) {
-      pageOfBlockNumbers.push(highBlockNumber - cursor++);
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      store.dispatch(fetchPageOfBlocks(this.getPageNumber()));
     }
+  }
 
-    return pageOfBlockNumbers;
+  // FIXME : Mix me in
+  getPageNumber() {
+    const queryString = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    return queryString.page || 0;
+  }
+
+  renderBlocksToFetch(blocks) {
+    const blockNumbers = (
+      blocks
+        .filter(b => b.blockIsFetching)
+        .map(b => `#${b.blockNumber}`)
+        .join(', ')
+    );
+    return <i>Fetching {blockNumbers}</i>
   }
 
   render() {
-    const { blocks, loading } = this.state;
+    const { blocksAreFetching, blocks } = this.props;
     return (
       <div>
-        <div>{loading ? <p>Loading...</p> : <BlockList blocks={blocks} />}</div>
+        <div>
+          { blocksAreFetching && this.renderBlocksToFetch(blocks) }
+          <BlockList blocks={blocks} />
+        </div>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  return { state: state };
+  return {
+    blocksAreFetching: state.blocks.blocksAreFetching,
+    blocks: state.blocks.pageOfBlocks
+  };
 };
 
 export default connect(mapStateToProps, null)(Blocks);

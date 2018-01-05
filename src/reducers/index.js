@@ -7,6 +7,9 @@ import {
   RECEIVE_TRANSACTIONS_FOR_BLOCK,
   REQUEST_BLOCK,
   RECEIVE_BLOCK,
+  REQUEST_PAGE_OF_BLOCKS,
+  RECEIVE_PAGE_OF_BLOCKS,
+  RECEIVE_BLOCK_IN_PAGE,
   CLEAR_SEARCH_QUERY,
   UPDATE_SEARCH_QUERY,
   INVALID_SEARCH_QUERY,
@@ -45,7 +48,9 @@ function transactions(
 function blocks(
   state = {
     blockIsFetching: true,
+    blocksAreFetching: true,
     block: null,
+    pageOfBlocks: []
   },
   action
 ) {
@@ -54,6 +59,28 @@ function blocks(
       return { ...state, blockIsFetching: true };
     case RECEIVE_BLOCK:
       return { ...state, blockIsFetching: false, block: action.block };
+    case REQUEST_PAGE_OF_BLOCKS:
+      return {
+        ...state,
+        blocksAreFetching: true,
+        pageOfBlocks: action.blockNumbers.map((blockNumber) => {
+          return { blockNumber, blockIsFetching: true, block: null }
+        })
+      };
+    case RECEIVE_PAGE_OF_BLOCKS:
+      return { ...state, blocksAreFetching: false };
+    case RECEIVE_BLOCK_IN_PAGE:
+      const blockIndex = state.pageOfBlocks.findIndex(block => {
+        return block.blockNumber === action.blockNumber
+      });
+      return {
+        ...state,
+        pageOfBlocks: [
+          ...state.pageOfBlocks.slice(0, blockIndex),
+          { blockNumber: action.blockNumber, blockIsFetching: false, block: action.block },
+          ...state.pageOfBlocks.slice(blockIndex + 1)
+        ]
+      };
     default:
       return state;
   }
