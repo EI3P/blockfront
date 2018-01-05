@@ -1,59 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
 import BlockList from "./BlockList";
+import { fetchPageOfBlocks } from "../actions";
 import config from "../config";
+import store from "../store";
 
 class Blocks extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-      // FIXME: Set from redux
-      // XXX: This should render as `page + 1`
-      page: 0,
-      pageSize: 5
-    };
-  }
 
   componentDidMount() {
-    const { web3 } = config;
-    web3.eth
-      .getBlock("latest", false)
-      .then(block => {
-        this.setState({
-          latestBlockNumber: block.number
-        });
-        return block.number;
-      })
-      .then(latestBlockNumber => {
-        // FIXME this will be a reducer
-        let pageOfBlockNumbers = this.getPageOfBlockNumbers();
-        return Promise.all(
-          pageOfBlockNumbers.map(blockNumber =>
-            web3.eth.getBlock(blockNumber, true)
-          )
-        );
-      })
-      .then(blocks => {
-        this.setState({
-          blocks: blocks,
-          loading: false
-        });
-      });
+    const { pageNumber } = this.props.page;
+    store.dispatch(fetchPageOfBlocks(pageNumber));
   }
 
-  getPageOfBlockNumbers() {
-    const { latestBlockNumber, page, pageSize } = this.state;
-    const highBlockNumber = latestBlockNumber - page * pageSize;
-
-    let pageOfBlockNumbers = [];
-    let cursor = 0;
-
-    while (cursor < pageSize) {
-      pageOfBlockNumbers.push(highBlockNumber - cursor++);
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      store.dispatch(fetchBlock(nextProps.page));
     }
-
-    return pageOfBlockNumbers;
   }
 
   render() {
@@ -67,7 +29,10 @@ class Blocks extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return { state: state };
+  return {
+    blocksAreFetching: state.blocks.blocksAreFetching,
+    blocks: state.blocks.pageOfBlocks
+  };
 };
 
 export default connect(mapStateToProps, null)(Blocks);
