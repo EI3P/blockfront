@@ -120,14 +120,14 @@ function addresses(
       };
     case REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS:
       return {
-        ..state,
+        ...state,
         addressTransactionsAreFetching: true
       };
     case RECEIVE_PAGE_OF_ADDRESS_TRANSACTIONS:
       return {
-        ..state,
+        ...state,
         addressTransactionsAreFetching: false,
-        addressTransactions
+        addressTransactions: action.addressTransactions
       };
     case REQUEST_PAGE_OF_ADDRESSES:
       return {

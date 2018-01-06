@@ -207,7 +207,7 @@ export function requestPageOfAddressTransactions() {
 
 export function receivePageOfAddressTransactions(addressTransactions) {
   return {
-    type: REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS,
+    type: RECEIVE_PAGE_OF_ADDRESS_TRANSACTIONS,
     addressTransactions
   };
 }
