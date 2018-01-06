@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import Web3 from "web3";
 
 // Txns
@@ -13,15 +14,20 @@ export const REQUEST_PAGE_OF_BLOCKS = "REQUEST_PAGE_OF_BLOCKS";
 export const RECEIVE_PAGE_OF_BLOCKS = "RECEIVE_PAGE_OF_BLOCKS";
 export const RECEIVE_BLOCK_IN_PAGE = "RECEIVE_BLOCK_IN_PAGE";
 
+// Addresses
+export const REQUEST_PAGE_OF_ADDRESSES = "REQUEST_PAGE_OF_ADDRESSES";
+export const RECEIVE_PAGE_OF_ADDRESSES = "RECEIVE_PAGE_OF_ADDRESSES";
+export const RECEIVE_ADDRESS_IN_PAGE = "RECEIVE_ADDRESS_IN_PAGE";
+
 // Search
 export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
 export const UPDATE_SEARCH_QUERY = "UPDATE_SEARCH_QUERY";
 export const INVALID_SEARCH_QUERY = "INVALID_SEARCH_QUERY";
 
+const NODE = "http://node.blockfront.io:8545";
+
 // TODO: set this dynamically
-const web3 = new Web3(
-  new Web3.providers.HttpProvider("http://node.blockfront.io:8545")
-);
+const web3 = new Web3(new Web3.providers.HttpProvider(NODE));
 
 export function requestTransaction(id) {
   return {
@@ -135,6 +141,66 @@ export function receiveBlockInPage(blockNumber, block) {
     type: RECEIVE_BLOCK_IN_PAGE,
     blockNumber,
     block
+  };
+}
+
+export function fetchPageOfAddresses(lastAddressId) {
+  const PAGE_SIZE = 5;
+
+  return function (dispatch) {
+    return fetch(
+      NODE,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          "method":"parity_listAccounts",
+          "params": [PAGE_SIZE, lastAddressId],
+          "id": 1,
+          "jsonrpc": "2.0"
+        }),
+        headers: { "Content-Type": "application/json" }
+      }
+    )
+    .then(res => res.json())
+    .then(body => body.result)
+    .then((addressIds) => {
+      dispatch(requestPageOfAddresses(addressIds));
+      return Promise.all(addressIds.map((addressId) => {
+        return Promise.all([
+          web3.eth.getBalance(addressId, "latest"),
+          web3.eth.getTransactionCount(addressId, "latest")
+        ]).then(([balance, transactionCount]) => {
+          dispatch(receiveAddressInPage(addressId, {
+            addressId,
+            balance,
+            transactionCount
+          }));
+        });
+      })).then(() => {
+        dispatch(receivePageOfAddresses());
+      });
+    });
+  };
+}
+
+export function requestPageOfAddresses(addressIds) {
+  return {
+    type: REQUEST_PAGE_OF_ADDRESSES,
+    addressIds
+  };
+}
+
+export function receivePageOfAddresses() {
+  return {
+    type: RECEIVE_PAGE_OF_ADDRESSES,
+  };
+}
+
+export function receiveAddressInPage(addressId, address) {
+  return {
+    type: RECEIVE_ADDRESS_IN_PAGE,
+    addressId,
+    address
   };
 }
 

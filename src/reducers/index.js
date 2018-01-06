@@ -10,6 +10,9 @@ import {
   REQUEST_PAGE_OF_BLOCKS,
   RECEIVE_PAGE_OF_BLOCKS,
   RECEIVE_BLOCK_IN_PAGE,
+  REQUEST_PAGE_OF_ADDRESSES,
+  RECEIVE_PAGE_OF_ADDRESSES,
+  RECEIVE_ADDRESS_IN_PAGE,
   CLEAR_SEARCH_QUERY,
   UPDATE_SEARCH_QUERY,
   INVALID_SEARCH_QUERY,
@@ -86,6 +89,46 @@ function blocks(
   }
 }
 
+// address data
+function addresses(
+  state = {
+    addressIsFetching: true,
+    addressesAreFetching: true,
+    address: null,
+    pageOfAddresses: [],
+    lastAddressId: null,
+  },
+  action
+) {
+  switch(action.type) {
+    case REQUEST_PAGE_OF_ADDRESSES:
+      return {
+        ...state,
+        addressesAreFetching: true,
+        pageOfAddresses: action.addressIds.map((addressId) => {
+          return { addressId, addressIsFetching: true, address: null }
+        })
+      };
+    case RECEIVE_PAGE_OF_ADDRESSES:
+      return { ...state, addressesAreFetching: false };
+    case RECEIVE_ADDRESS_IN_PAGE:
+      const addressIndex = state.pageOfAddresses.findIndex(address => {
+        return address.addressId === action.addressId
+      });
+      return {
+        ...state,
+        pageOfAddresses: [
+          ...state.pageOfAddresses.slice(0, addressIndex),
+          { addressId: action.addressId, addressIsFetching: false, address: action.address },
+          ...state.pageOfAddresses.slice(addressIndex + 1)
+        ],
+        lastAddressId: state.pageOfAddresses[state.pageOfAddresses.length - 1].addressId
+      };
+    default:
+      return state;
+  }
+}
+
 // site search
 
 function search(state={ query: "", validQuery: true}, action) {
@@ -114,6 +157,7 @@ function search(state={ query: "", validQuery: true}, action) {
 
 export default combineReducers({
   routing: routerReducer,
+  addresses,
   blocks,
   transactions,
   search

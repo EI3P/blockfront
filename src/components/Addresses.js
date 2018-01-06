@@ -1,64 +1,56 @@
+import qs from "qs";
 import React from "react";
 import { connect } from "react-redux";
-import fetch from "node-fetch";
 import AddressList from "./AddressList";
-
-// FIXME Etherchain light calls parity_listAccounts on their own web3 fork. We
-// will perform this call manually with `fetch` for now
+import { fetchPageOfAddresses } from "../actions";
+import store from "../store";
 
 class Addresses extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      lastAddress: null,
-      loading: true,
-      pageSize: 5
-    };
-  }
 
   componentDidMount() {
-    // XXX Add more data for each address
-    this.getListOfAddresses()
-      .then((addresses) => {
-        this.setState({
-          addresses,
-          // FIXME : Put this in a query param
-          lastAddress: addresses[addresses.length - 1],
-          loading: false,
-        });
-      });
+    store.dispatch(fetchPageOfAddresses(this.getLastAddress()));
   }
 
-  getListOfAddresses() {
-    return fetch(
-      "http://node.blockfront.io:8545",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          "method":"parity_listAccounts",
-          "params": [this.state.pageSize, this.state.lastAddress],
-          "id": 1,
-          "jsonrpc": "2.0"
-        }),
-        headers: { "Content-Type": "application/json" }
-      }
-    )
-    .then(res => res.json())
-    .then(body => body.result);
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      store.dispatch(fetchPageOfAddresses(this.getLastAddress()));
+    }
+  }
+
+  getLastAddress() {
+    const queryString = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    return queryString.lastAddress || null;
+  }
+
+  // FIXME This will probably look uglier than with blocks
+  renderAddressesToFetch(addresses) {
+    const addressIds = (
+      addresses
+        .filter(a => a.addressIsFetching)
+        .map(a => a.addressId)
+        .join(', ')
+    );
+    return <i>Fetching {addressIds}</i>
   }
 
   render() {
-    const { addresses, loading } = this.state;
+    const { addressesAreFetching, addresses } = this.props;
     return (
       <div>
-        <div>{loading ? <p>Loading...</p> : <AddressList addresses={addresses} />}</div>
+        <div>
+          { addressesAreFetching && this.renderAddressesToFetch(addresses) }
+          <AddressList addresses={addresses} />
+        </div>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => {
-  return { state: state };
+  return {
+    addressesAreFetching: state.addresses.addressesAreFetching,
+    addresses: state.addresses.pageOfAddresses
+  };
 };
 
 export default connect(mapStateToProps, null)(Addresses);
