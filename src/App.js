@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
 import Home from "./components/Home";
@@ -9,45 +9,60 @@ import Block from "./components/Block";
 import Blocks from "./components/Blocks";
 import Address from "./components/Address";
 import Addresses from "./components/Addresses";
+import HeaderMenu from "./components/HeaderMenu";
 import SearchBar from "./components/SearchBar";
 import store, { history } from "./store";
-import "normalize.css";
-import "@blueprintjs/core/dist/blueprint.css";
-import "@blueprintjs/core/resources/icons/icons-20.woff";
-import "@blueprintjs/core/resources/icons/icons-20.ttf";
-import "@blueprintjs/core/resources/icons/icons-20.eot";
-import "@blueprintjs/core/resources/icons/icons.json";
-import "bootstrap-4-grid/css/grid.css";
+import { Layout, Row, Col } from 'antd';
+import 'antd/dist/antd.css';
+import glamorous from 'glamorous';
+
+const LogoText = glamorous.div({
+  color: '#fafafa',
+  '@media(max-width: 768px)': {
+    fontSize: '14px'
+  },
+  '@media(min-width: 769px)': {
+    fontSize: '30px'
+  }
+})
+
+const ResponsiveHeaderWrapper = glamorous.div({
+  '@media(max-width: 768px)': {
+    '& .ant-layout-header': {
+      height: '100%'
+    }
+  }
+})
+
+
 
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <div className="App">
-            <header className="App-header">
-              <h1 className="App-title">Blockfront</h1>
-              <Link to="/tx">
-                <b>Tx </b>
-              </Link>
-              <Link to="/block">
-                <b>Block </b>
-              </Link>
-              <Link to="/address">
-                <b>Address </b>
-              </Link>
-              <br />
-              <SearchBar />
-              <br />
-            </header>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/tx" component={Transactions} />
-            <Route path="/tx/:txId" component={Transaction} />
-            <Route exact path="/block" component={Blocks} />
-            <Route path="/block/:blockNumber" component={Block} />
-            <Route exact path="/address" component={Addresses} />
-            <Route path="/address/:addressId" component={Address} />
-          </div>
+          <ResponsiveHeaderWrapper>
+            <Layout className="App">
+              <Layout.Header className="App-header">
+                <Row>
+                  <Col sm={24} md={12}>
+                    <HeaderMenu />
+                  </Col>
+                  <Col sm={24} md={12}>
+                    <SearchBar />
+                  </Col>
+                </Row>
+              </Layout.Header>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/tx" component={Transactions} />
+              <Route path="/tx/:txId" component={Transaction} />
+              <Route exact path="/block" component={Blocks} />
+              <Route path="/block/:blockNumber" component={Block} />
+              <Route exact path="/address" component={Addresses} />
+              <Route path="/address/:addressId" component={Address} />
+              <Layout.Footer>Blockfront 2018</Layout.Footer>
+            </Layout>
+          </ResponsiveHeaderWrapper>
         </ConnectedRouter>
       </Provider>
     );
