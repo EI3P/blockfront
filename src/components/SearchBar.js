@@ -8,6 +8,7 @@ import {
 } from "../actions";
 import store from "../store";
 import { isStrictAddress, isStrictTransaction, isBlock } from "../util";
+import { Input } from 'antd';
 
 class SearchBar extends React.Component {
   constructor() {
@@ -22,8 +23,7 @@ class SearchBar extends React.Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input
-            style={{ width: "270px" }}
+          <Input.Search
             placeholder="Block # | Transaction hash | Address hash"
             value={query}
             onChange={this.handleChange}
@@ -31,7 +31,6 @@ class SearchBar extends React.Component {
           <div>
             {validQuery || <strong style={{ color: "red" }}>Invalid input, please use strict formatting for hashes.</strong>}
           </div>
-          <input type="submit" value="Search" />
         </form>
       </div>
     );
