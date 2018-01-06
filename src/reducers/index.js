@@ -105,7 +105,7 @@ function addresses(
       return {
         ...state,
         addressesAreFetching: true,
-        pageOfAddresses: action.addressesIds.map((addressId) => {
+        pageOfAddresses: action.addressIds.map((addressId) => {
           return { addressId, addressIsFetching: true, address: null }
         })
       };
@@ -122,7 +122,7 @@ function addresses(
           { addressId: action.addressId, addressIsFetching: false, address: action.address },
           ...state.pageOfAddresses.slice(addressIndex + 1)
         ],
-        lastAddressId: pageOfAddresses[pageOfAddresses.length - 1].addressId
+        lastAddressId: state.pageOfAddresses[state.pageOfAddresses.length - 1].addressId
       };
     default:
       return state;
@@ -157,6 +157,7 @@ function search(state={ query: "", validQuery: true}, action) {
 
 export default combineReducers({
   routing: routerReducer,
+  addresses,
   blocks,
   transactions,
   search

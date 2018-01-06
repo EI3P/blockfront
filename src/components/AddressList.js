@@ -4,10 +4,11 @@ import AddressSummary from "./AddressSummary";
 export default class AddressList extends React.Component {
   render() {
     const { addresses } = this.props;
+    const fetchedAddresses = addresses.filter((address) => !address.addressIsFetching);
 
     return (
       <div>
-        {addresses.map((address, i) => <AddressSummary address={address} key={i} />)}
+        {fetchedAddresses.map((fetchedAddress, i) => <AddressSummary address={fetchedAddress.address} key={i} />)}
       </div>
     );
   }

@@ -176,7 +176,9 @@ export function fetchPageOfAddresses(lastAddressId) {
             transactionCount
           }));
         });
-      }));
+      })).then(() => {
+        dispatch(receivePageOfAddresses());
+      });
     });
   };
 }
