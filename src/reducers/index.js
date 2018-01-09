@@ -116,7 +116,8 @@ function addresses(
       return {
         ...state,
         addressIsFetching: false,
-        address: action.address
+        address: action.address,
+        isContract: action.address.code !== '0x'
       };
     case REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS:
       return {
@@ -147,7 +148,7 @@ function addresses(
         ...state,
         pageOfAddresses: [
           ...state.pageOfAddresses.slice(0, addressIndex),
-          { addressId: action.addressId, addressIsFetching: false, address: action.address },
+          { addressId: action.addressId, addressIsFetching: false, address: action.address, isContract: action.address.code !== '0x' },
           ...state.pageOfAddresses.slice(addressIndex + 1)
         ],
         lastAddressId: state.pageOfAddresses[state.pageOfAddresses.length - 1].addressId
