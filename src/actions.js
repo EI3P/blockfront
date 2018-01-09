@@ -40,19 +40,23 @@ export function requestTransaction(id) {
   };
 }
 
-export function receiveTransaction(id, transaction) {
+export function receiveTransaction(id, transaction, transactionReceipt) {
   return {
     type: RECEIVE_TRANSACTION,
     id,
-    transaction
+    transaction,
+    transactionReceipt
   };
 }
 
 export function fetchTransaction(id) {
   return function(dispatch) {
     dispatch(requestTransaction(id));
-    return web3.eth.getTransaction(id).then(tx => {
-      dispatch(receiveTransaction(id, tx));
+    return Promise.all([
+      web3.eth.getTransaction(id),
+      web3.eth.getTransactionReceipt(id),
+    ]).then(([tx, txReceipt]) => {
+      dispatch(receiveTransaction(id, tx, txReceipt));
     });
   };
 }

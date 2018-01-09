@@ -29,6 +29,7 @@ function transactions(
     txIsFetching: true,
     txsAreFetching: true,
     transaction: null,
+    transactionReceipt: null,
     transactions: []
   },
   action
@@ -37,7 +38,7 @@ function transactions(
     case REQUEST_TRANSACTION:
       return { ...state, txIsFetching: true };
     case RECEIVE_TRANSACTION:
-      return { ...state, txIsFetching: false, transaction: action.transaction };
+      return { ...state, txIsFetching: false, transaction: action.transaction, transactionReceipt: action.transactionReceipt };
     case REQUEST_TRANSACTIONS_FOR_BLOCK:
       return { ...state, txsAreFetching: true };
     case RECEIVE_TRANSACTIONS_FOR_BLOCK:
