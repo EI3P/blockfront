@@ -1,86 +1,55 @@
+import qs from "qs";
 import React from "react";
 import { connect } from "react-redux";
 import AddressInfo from "./AddressInfo";
-import config from "../config";
+import AddressInfoTxns from "./AddressInfoTxns";
+import { fetchAddress, fetchPageOfAddressTransactions } from "../actions";
+import store from "../store";
 
-// XXX How to get inbound and outbound transactions ?
-// I think we will want our own tables of blocks and
-// transactions - since these are immutable we shouldn't
-// have to make an RPC call to get them. However, if
-// people want to view them at a block other than latest
-// we may need a different approach.
 
 class Address extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-      // FIXME: Set from redux
-      // XXX: This should render as `page + 1`
-      page: 0,
-      pageSize: 5
-    };
-  }
-
-  getPageOfAddressTxns() {
-    const { addressId } = this.props;
-    const { latestBlockNumber, page, pageSize } = this.state;
-    const { web3 } = config;
-
-    let highBlockNumber = latestBlockNumber - page * pageSize;
-    highBlockNumber = highBlockNumber > 0 ? highBlockNumber : pageSize;
-
-    let lowBlockNumber = highBlockNumber > pageSize ? (highBlockNumber - pageSize) : 0;
-
-    return web3.eth.getPastLogs({
-      "fromBlock": String(lowBlockNumber),
-      "toBlock": String(highBlockNumber),
-      "address": addressId
-    });
-  }
-
   componentDidMount() {
-    const { addressId } = this.props;
-    const { web3 } = config;
+    store.dispatch(fetchAddress(this.props.addressId));
+    store.dispatch(fetchPageOfAddressTransactions(this.props.addressId, this.getPageNumber()));
+  }
 
-    web3.eth
-      .getBlock("latest", false)
-      .then(block => {
-        this.setState({
-          latestBlockNumber: block.number
-        });
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      store.dispatch(fetchAddress(nextProps.addressId));
+      store.dispatch(fetchPageOfAddressTransactions(nextProps.addressId, this.getPageNumber()));
+    }
+  }
 
-        Promise.all([
-          web3.eth.getBalance(addressId, "latest"),
-          this.getPageOfAddressTxns(),
-          web3.eth.getCode(addressId, "latest"),
-        ]).then(([balance, transactions, code]) => {
-          this.setState({
-            loading: false,
-            addressInfo: {
-              id: addressId,
-              balance,
-              transactions,
-              code,
-            }
-          });
-        });
-      });
+  getPageNumber() {
+    const queryString = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    return queryString.page || 0;
   }
 
   render() {
-    const { loading, addressInfo } = this.state;
+    const {
+      addressIsFetching,
+      addressTransactionsAreFetching,
+      address,
+      addressTransactions
+    } = this.props;
 
     return (
       <div>
-        <div>{loading ? <p>Loading...</p> : <AddressInfo addressInfo={addressInfo} />}</div>
+        <div>{addressIsFetching ? <p>Fetching address...</p> : <AddressInfo address={address} />}</div>
+        <div>{addressTransactionsAreFetching ? <p>Fetching address transactions...</p> : <AddressInfoTxns addressTransactions={addressTransactions} />}</div>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { addressId: ownProps.match.params.addressId };
+  return {
+    addressId: ownProps.match.params.addressId,
+    addressIsFetching: state.addresses.addressIsFetching,
+    addressTransactionsAreFetching: state.addresses.addressTransactionsAreFetching,
+    address: state.addresses.address,
+    addressTransactions: state.addresses.addressTransactions
+  };
 };
 
 export default connect(mapStateToProps, null)(Address);

@@ -10,6 +10,10 @@ import {
   REQUEST_PAGE_OF_BLOCKS,
   RECEIVE_PAGE_OF_BLOCKS,
   RECEIVE_BLOCK_IN_PAGE,
+  REQUEST_ADDRESS,
+  RECEIVE_ADDRESS,
+  REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS,
+  RECEIVE_PAGE_OF_ADDRESS_TRANSACTIONS,
   REQUEST_PAGE_OF_ADDRESSES,
   RECEIVE_PAGE_OF_ADDRESSES,
   RECEIVE_ADDRESS_IN_PAGE,
@@ -94,13 +98,37 @@ function addresses(
   state = {
     addressIsFetching: true,
     addressesAreFetching: true,
+    addressTransactionsAreFetching: true,
     address: null,
+    addressTransactions: [],
     pageOfAddresses: [],
     lastAddressId: null,
   },
   action
 ) {
   switch(action.type) {
+    case REQUEST_ADDRESS:
+      return {
+        ...state,
+        addressIsFetching: true,
+      };
+    case RECEIVE_ADDRESS:
+      return {
+        ...state,
+        addressIsFetching: false,
+        address: action.address
+      };
+    case REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS:
+      return {
+        ...state,
+        addressTransactionsAreFetching: true
+      };
+    case RECEIVE_PAGE_OF_ADDRESS_TRANSACTIONS:
+      return {
+        ...state,
+        addressTransactionsAreFetching: false,
+        addressTransactions: action.addressTransactions
+      };
     case REQUEST_PAGE_OF_ADDRESSES:
       return {
         ...state,
