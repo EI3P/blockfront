@@ -15,10 +15,6 @@ export function isBlock(value) {
 
 // Formatting
 
-export function formatTopics(topics) {
-  return topics.map((topic, i) => `[${i}] ${topic}`);
-}
-
 export function formatData(data) {
   // XXX Data always aligned on 32-bytes
   // FIXME ugly and bad

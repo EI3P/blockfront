@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import TransactionLog from "./TransactionLog";
+import TransactionLogs from "./TransactionLogs";
 
 const TransactionInfo = ({ info, receipt }) => (
   <div>
@@ -34,7 +34,7 @@ const TransactionInfo = ({ info, receipt }) => (
       <dt>Input Data</dt>
       <dd>{info.input}</dd>
     </dl>
-    {receipt && receipt.logs.length > 0 && receipt.logs.map((log) => <TransactionLog log={log} />)}
+    {receipt && receipt.logs.length > 0 && <TransactionLogs logs={receipt.logs} />}
   </div>
 );
 
