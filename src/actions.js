@@ -236,11 +236,13 @@ export function fetchPageOfAddresses(lastAddressId) {
       return Promise.all(addressIds.map((addressId) => {
         return Promise.all([
           web3.eth.getBalance(addressId, "latest"),
+          web3.eth.getCode(addressId, "latest"),
           web3.eth.getTransactionCount(addressId, "latest")
-        ]).then(([balance, transactionCount]) => {
+        ]).then(([balance, code, transactionCount]) => {
           dispatch(receiveAddressInPage(addressId, {
             addressId,
             balance,
+            code,
             transactionCount
           }));
         });

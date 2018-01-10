@@ -8,7 +8,7 @@ export default class AddressList extends React.Component {
 
     return (
       <div>
-        {fetchedAddresses.map((fetchedAddress, i) => <AddressSummary address={fetchedAddress.address} key={i} />)}
+        {fetchedAddresses.map((fetchedAddress, i) => <AddressSummary address={fetchedAddress.address} isContract={fetchedAddress.isContract} key={i} />)}
       </div>
     );
   }

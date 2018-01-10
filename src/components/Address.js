@@ -30,12 +30,13 @@ class Address extends React.Component {
       addressIsFetching,
       addressTransactionsAreFetching,
       address,
-      addressTransactions
+      addressTransactions,
+      isContract
     } = this.props;
 
     return (
       <div>
-        <div>{addressIsFetching ? <p>Fetching address...</p> : <AddressInfo address={address} />}</div>
+        <div>{addressIsFetching ? <p>Fetching address...</p> : <AddressInfo address={address} isContract={isContract} />}</div>
         <div>{addressTransactionsAreFetching ? <p>Fetching address transactions...</p> : <AddressInfoTxns addressTransactions={addressTransactions} />}</div>
       </div>
     );
@@ -48,7 +49,8 @@ const mapStateToProps = (state, ownProps) => {
     addressIsFetching: state.addresses.addressIsFetching,
     addressTransactionsAreFetching: state.addresses.addressTransactionsAreFetching,
     address: state.addresses.address,
-    addressTransactions: state.addresses.addressTransactions
+    addressTransactions: state.addresses.addressTransactions,
+    isContract: state.addresses.isContract
   };
 };
 
