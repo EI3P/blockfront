@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import TransactionLogs from "./TransactionLogs";
+import TransactionTrace from "./TransactionTrace";
 
-const TransactionInfo = ({ info, receipt }) => (
+const TransactionInfo = ({ info, receipt, trace }) => (
   <div>
     <dl>
       <dt>Hash</dt>
@@ -35,6 +36,7 @@ const TransactionInfo = ({ info, receipt }) => (
       <dd>{info.input}</dd>
     </dl>
     {receipt && receipt.logs.length > 0 && <TransactionLogs logs={receipt.logs} />}
+    {trace && trace.length > 0 && <TransactionTrace trace={trace} />}
   </div>
 );
 

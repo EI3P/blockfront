@@ -40,12 +40,13 @@ export function requestTransaction(id) {
   };
 }
 
-export function receiveTransaction(id, transaction, transactionReceipt) {
+export function receiveTransaction(id, transaction, transactionReceipt, transactionTrace) {
   return {
     type: RECEIVE_TRANSACTION,
     id,
     transaction,
-    transactionReceipt
+    transactionReceipt,
+    transactionTrace
   };
 }
 
@@ -55,8 +56,21 @@ export function fetchTransaction(id) {
     return Promise.all([
       web3.eth.getTransaction(id),
       web3.eth.getTransactionReceipt(id),
-    ]).then(([tx, txReceipt]) => {
-      dispatch(receiveTransaction(id, tx, txReceipt));
+      fetch(
+        NODE,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            "method":"trace_transaction",
+            "params": [id],
+            "id": 1,
+            "jsonrpc": "2.0"
+          }),
+          headers: { "Content-Type": "application/json" }
+        }
+      ).then(res => res.json()).then(body => body.result)
+    ]).then(([tx, txReceipt, txTrace]) => {
+      dispatch(receiveTransaction(id, tx, txReceipt, txTrace));
     });
   };
 }

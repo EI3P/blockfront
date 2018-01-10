@@ -38,7 +38,13 @@ function transactions(
     case REQUEST_TRANSACTION:
       return { ...state, txIsFetching: true };
     case RECEIVE_TRANSACTION:
-      return { ...state, txIsFetching: false, transaction: action.transaction, transactionReceipt: action.transactionReceipt };
+      return {
+        ...state,
+        txIsFetching: false,
+        transaction: action.transaction,
+        transactionReceipt: action.transactionReceipt,
+        transactionTrace: action.transactionTrace
+      };
     case REQUEST_TRANSACTIONS_FOR_BLOCK:
       return { ...state, txsAreFetching: true };
     case RECEIVE_TRANSACTIONS_FOR_BLOCK:
