@@ -16,14 +16,14 @@ class Transaction extends React.Component {
   }
 
   render() {
-    const { txId, txInfo, txFetching } = this.props;
+    const { txId, txInfo, txReceipt, txFetching } = this.props;
 
     return (
       <div>
         <p>
           Transaction ID: <b>{txId}</b>
         </p>
-        {txFetching ? <p>Loading...</p> : <TransactionInfo info={txInfo} />}
+        {txFetching ? <p>Loading...</p> : <TransactionInfo info={txInfo} receipt={txReceipt} />}
       </div>
     );
   }
@@ -33,7 +33,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     txId: ownProps.match.params.txId,
     txInfo: state.transactions.transaction,
-    txFetching: state.transactions.txIsFetching
+    txFetching: state.transactions.txIsFetching,
+    txReceipt: state.transactions.transactionReceipt
   };
 };
 
