@@ -1,23 +1,25 @@
 import React from "react";
+import PropTypes from "prop-types";
+import BlockInfoTxn from "./BlockInfoTxn";
 
-import BlockInfoTxn from "./BlockInfoTxn"
+const BlockInfo = ({ blockInfo }) => {
+  return (
+    <div>
+      <p>Block hash: {blockInfo.hash}</p>
+      <p>Block number: {blockInfo.number}</p>
+      <ul>
+        {blockInfo.transactions.map((txnInfo, i) =>
+            <li key={i}>
+              <BlockInfoTxn txnInfo={txnInfo} />
+            </li>
+          )}
+      </ul>
+    </div>
+  );
+};
 
-export default class BlockInfo extends React.Component {
-  render() {
-    const { blockInfo } = this.props;
+BlockInfo.propTypes = {
+  blockInfo: PropTypes.object,
+};
 
-    return (
-      <div>
-        <p>Block hash: {blockInfo.hash}</p>
-        <p>Block number: {blockInfo.number}</p>
-        <ul>
-          {blockInfo.transactions.map((txnInfo, i) =>
-              <li key={i}>
-                <BlockInfoTxn txnInfo={txnInfo} />
-              </li>
-            )}
-        </ul>
-      </div>
-    );
-  }
-}
+export default BlockInfo;

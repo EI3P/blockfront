@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Card } from 'antd';
 
 const TransactionTrace = ({ trace }) => (
@@ -8,4 +9,9 @@ const TransactionTrace = ({ trace }) => (
     </pre>
   </Card>
 );
+
+TransactionTrace.propTypes = {
+  trace: PropTypes.object,
+};
+
 export default TransactionTrace;

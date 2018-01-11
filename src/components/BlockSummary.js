@@ -1,10 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-export default class BlockSummary extends React.Component {
-  render() {
-    const { block } = this.props;
-
+const BlockSummary = ({ block }) => {
     // XXX Probably want date and some other stuff
     return (
       <div>
@@ -12,5 +10,10 @@ export default class BlockSummary extends React.Component {
         <p>Block number: <Link to={`/block/${block.number}`}>{block.number}</Link></p>
       </div>
     );
-  }
-}
+};
+
+BlockSummary.propTypes = {
+  block: PropTypes.object
+};
+
+export default BlockSummary;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { fetchTransactionsForBlock } from "../actions";
 import store from "../store";
@@ -21,6 +22,11 @@ class Transactions extends React.Component {
     );
   }
 }
+
+Transactions.propTypes = {
+  txsAreFetching: PropTypes.bool,
+  transactions: PropTypes.array,
+};
 
 const mapStateToProps = state => {
   return {

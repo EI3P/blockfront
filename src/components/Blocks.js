@@ -1,5 +1,6 @@
 import qs from "qs";
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import BlockList from "./BlockList";
 import { fetchPageOfBlocks } from "../actions";
@@ -44,6 +45,11 @@ class Blocks extends React.Component {
       </div>
     );
   }
+}
+
+Blocks.propTypes = {
+  blocksAreFetching: PropTypes.bool,
+  blocks: PropTypes.array
 }
 
 const mapStateToProps = state => {

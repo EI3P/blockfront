@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import {
@@ -59,6 +60,11 @@ class SearchBar extends React.Component {
     }
   }
 }
+
+SearchBar.propTypes = {
+  query: PropTypes.string,
+  validQuery: PropTypes.bool,
+};
 
 const mapStateToProps = state => {
   return {
