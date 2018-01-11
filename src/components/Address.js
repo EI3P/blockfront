@@ -1,6 +1,7 @@
 import qs from "qs";
 import React from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import AddressInfo from "./AddressInfo";
 import AddressInfoTxns from "./AddressInfoTxns";
 import { fetchAddress, fetchPageOfAddressTransactions } from "../actions";
@@ -42,6 +43,15 @@ class Address extends React.Component {
     );
   }
 }
+
+Address.propTypes = {
+  addressId: PropTypes.string,
+  addressIsFetching: PropTypes.bool,
+  addressTransactionsAreFetching: PropTypes.bool,
+  address: PropTypes.object,
+  addressTransactions: PropTypes.array,
+  isContract: PropTypes.bool
+};
 
 const mapStateToProps = (state, ownProps) => {
   return {

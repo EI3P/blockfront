@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import AddressSummary from "./AddressSummary";
 
 export default class AddressList extends React.Component {
@@ -13,3 +14,7 @@ export default class AddressList extends React.Component {
     );
   }
 }
+
+AddressList.propTypes = {
+  addresses: PropTypes.array,
+};

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import BlockSummary from "./BlockSummary";
 
 export default class BlockList extends React.Component {
@@ -13,3 +14,7 @@ export default class BlockList extends React.Component {
     );
   }
 }
+
+BlockList.propTypes = {
+  blocks: PropTypes.array,
+};

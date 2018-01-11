@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import BlockInfo from "./BlockInfo";
 import { fetchBlock } from "../actions";
@@ -26,6 +27,12 @@ class Block extends React.Component {
     );
   }
 }
+
+Block.propTypes = {
+  blockNumber: PropTypes.string,
+  blockInfo: PropTypes.object,
+  blockFetching: PropTypes.bool,
+};
 
 const mapStateToProps = (state, ownProps) => {
   return {

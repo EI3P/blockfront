@@ -1,5 +1,5 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 import BlockInfoTxn from "./BlockInfoTxn"
 
 export default class BlockInfo extends React.Component {
@@ -21,3 +21,7 @@ export default class BlockInfo extends React.Component {
     );
   }
 }
+
+BlockInfo.propTypes = {
+  blockInfo: PropTypes.object,
+};

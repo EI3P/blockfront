@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import { Badge, List, Tag } from 'antd';
 import { formatData } from "../util";
 
@@ -27,5 +28,9 @@ const TransactionLog = ({ log }) => (
     </div>
   </div>
 );
+
+TransactionLog.propTypes = {
+  log: PropTypes.object
+};
 
 export default TransactionLog;

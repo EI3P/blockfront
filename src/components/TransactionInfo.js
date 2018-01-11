@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import TransactionLogs from "./TransactionLogs";
 import TransactionTrace from "./TransactionTrace";
 
@@ -39,5 +40,11 @@ const TransactionInfo = ({ info, receipt, trace }) => (
     {trace && trace.length > 0 ? <TransactionTrace trace={trace} /> : <b>No trace </b>}
   </div>
 );
+
+TransactionInfo.propTypes = {
+  info: PropTypes.object,
+  receipt: PropTypes.object,
+  trace: PropTypes.array
+};
 
 export default TransactionInfo;

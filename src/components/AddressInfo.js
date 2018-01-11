@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Web3 from "web3";
 
 // We want something like `BlockInfoTxn` here for each inbound/outbound txn
@@ -17,3 +18,8 @@ export default class AddressInfo extends React.Component {
     );
   }
 }
+
+AddressInfo.propTypes = {
+  address: PropTypes.string,
+  isContract: PropTypes.bool,
+};

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
 
@@ -17,3 +18,8 @@ export default class AddressSummary extends React.Component {
     );
   }
 }
+
+AddressSummary.propTypes = {
+  address: PropTypes.object,
+  isContract: PropTypes.bool,
+};

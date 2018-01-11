@@ -1,4 +1,5 @@
 import qs from "qs";
+import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import AddressList from "./AddressList";
@@ -6,7 +7,6 @@ import { fetchPageOfAddresses } from "../actions";
 import store from "../store";
 
 class Addresses extends React.Component {
-
   componentDidMount() {
     store.dispatch(fetchPageOfAddresses(this.getLastAddress()));
   }
@@ -45,6 +45,11 @@ class Addresses extends React.Component {
     );
   }
 }
+
+Addresses.propTypes = {
+  addressesAreFetching: PropTypes.bool,
+  addresses: PropTypes.array,
+};
 
 const mapStateToProps = state => {
   return {
