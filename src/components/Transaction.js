@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import TransactionInfo from "./TransactionInfo";
 import { fetchTransaction } from "../actions";
 import store from "../store";
@@ -28,6 +29,14 @@ class Transaction extends React.Component {
     );
   }
 }
+
+Transaction.propTypes = {
+  txId: PropTypes.string,
+  txInfo: PropTypes.object,
+  txFetching: PropTypes.bool,
+  txReceipt: PropTypes.object,
+  txTrace: PropTypes.arrayOf(PropTypes.object),
+};
 
 const mapStateToProps = (state, ownProps) => {
   return {
