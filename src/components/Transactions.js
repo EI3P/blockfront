@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { fetchTransactionsForBlock } from "../actions";
 import store from "../store";
-import BlockInfoTxn from "./BlockInfoTxn";
+import TransactionsTable from "./TransactionsTable";
 
 class Transactions extends React.Component {
   componentDidMount() {
@@ -11,17 +11,13 @@ class Transactions extends React.Component {
 
   render() {
     const { transactions, txsAreFetching } = this.props;
-    console.log("transactions:", transactions);
 
     return (
-      <div>
-        <p>Latest Transactions</p>
-        {txsAreFetching ? (
-          <p>Loading...</p>
-        ) : (
-          transactions.map((txnInfo, i) => <BlockInfoTxn txnInfo={txnInfo} />)
-        )}
-      </div>
+      <TransactionsTable
+        title="Latest Transactions"
+        transactions={transactions}
+        loading={txsAreFetching}
+      />
     );
   }
 }
