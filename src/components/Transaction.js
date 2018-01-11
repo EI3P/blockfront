@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import TransactionInfo from "./TransactionInfo";
 import { fetchTransaction } from "../actions";
 import store from "../store";
@@ -16,25 +17,34 @@ class Transaction extends React.Component {
   }
 
   render() {
-    const { txId, txInfo, txReceipt, txFetching } = this.props;
+    const { txId, txInfo, txReceipt, txTrace, txFetching } = this.props;
 
     return (
       <div>
         <p>
           Transaction ID: <b>{txId}</b>
         </p>
-        {txFetching ? <p>Loading...</p> : <TransactionInfo info={txInfo} receipt={txReceipt} />}
+        {txFetching ? <p>Loading...</p> : <TransactionInfo info={txInfo} receipt={txReceipt} trace={txTrace} />}
       </div>
     );
   }
 }
+
+Transaction.propTypes = {
+  txId: PropTypes.string,
+  txInfo: PropTypes.object,
+  txFetching: PropTypes.bool,
+  txReceipt: PropTypes.object,
+  txTrace: PropTypes.arrayOf(PropTypes.object),
+};
 
 const mapStateToProps = (state, ownProps) => {
   return {
     txId: ownProps.match.params.txId,
     txInfo: state.transactions.transaction,
     txFetching: state.transactions.txIsFetching,
-    txReceipt: state.transactions.transactionReceipt
+    txReceipt: state.transactions.transactionReceipt,
+    txTrace: state.transactions.transactionTrace
   };
 };
 

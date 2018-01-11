@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Badge, List, Tag } from 'antd';
-import { formatData, formatTopics } from "../util";
+import { formatData } from "../util";
 
 const TransactionLog = ({ log }) => (
   <div>
