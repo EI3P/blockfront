@@ -35,8 +35,8 @@ const TransactionInfo = ({ info, receipt, trace }) => (
       <dt>Input Data</dt>
       <dd>{info.input}</dd>
     </dl>
-    {receipt && receipt.logs.length > 0 && <TransactionLogs logs={receipt.logs} />}
-    {trace && trace.length > 0 && <TransactionTrace trace={trace} />}
+    {receipt && receipt.logs.length > 0 ? <TransactionLogs logs={receipt.logs} /> : <b>No logs</b>}
+    {trace && trace.length > 0 ? <TransactionTrace trace={trace} /> : <b>No trace </b>}
   </div>
 );
 
