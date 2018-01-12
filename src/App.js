@@ -12,29 +12,17 @@ import Addresses from "./components/Addresses";
 import HeaderMenu from "./components/HeaderMenu";
 import SearchBar from "./components/SearchBar";
 import store, { history } from "./store";
-import { Layout, Row, Col } from 'antd';
-import 'antd/dist/antd.css';
-import glamorous from 'glamorous';
-
-const LogoText = glamorous.div({
-  color: '#fafafa',
-  '@media(max-width: 768px)': {
-    fontSize: '14px'
-  },
-  '@media(min-width: 769px)': {
-    fontSize: '30px'
-  }
-})
+import { Layout, Row, Col } from "antd";
+import "antd/dist/antd.css";
+import glamorous from "glamorous";
 
 const ResponsiveHeaderWrapper = glamorous.div({
-  '@media(max-width: 768px)': {
-    '& .ant-layout-header': {
-      height: '100%'
+  "@media(max-width: 768px)": {
+    "& .ant-layout-header": {
+      height: "100%"
     }
   }
-})
-
-
+});
 
 class App extends Component {
   render() {
