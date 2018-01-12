@@ -2,7 +2,7 @@ import qs from "qs";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import AddressList from "./AddressList";
+import AddressTable from "./AddressTable";
 import { fetchPageOfAddresses } from "../actions";
 import store from "../store";
 
@@ -18,37 +18,27 @@ class Addresses extends React.Component {
   }
 
   getLastAddress() {
-    const queryString = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    const queryString = qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true
+    });
     return queryString.lastAddress || null;
-  }
-
-  // FIXME This will probably look uglier than with blocks
-  renderAddressesToFetch(addresses) {
-    const addressIds = (
-      addresses
-        .filter(a => a.addressIsFetching)
-        .map(a => a.addressId)
-        .join(', ')
-    );
-    return <i>Fetching {addressIds}</i>
   }
 
   render() {
     const { addressesAreFetching, addresses } = this.props;
     return (
-      <div>
-        <div>
-          { addressesAreFetching && this.renderAddressesToFetch(addresses) }
-          <AddressList addresses={addresses} />
-        </div>
-      </div>
+      <AddressTable
+        title="Random Addresses"
+        addresses={addresses}
+        loading={addressesAreFetching}
+      />
     );
   }
 }
 
 Addresses.propTypes = {
   addressesAreFetching: PropTypes.bool,
-  addresses: PropTypes.array,
+  addresses: PropTypes.array
 };
 
 const mapStateToProps = state => {

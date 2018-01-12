@@ -25,29 +25,31 @@ class TransactionsTable extends React.Component {
             title="Hash"
             dataIndex="hash"
             key="hash"
-            render={t => <Link to={`/tx/${t}`}>{t.substring(0, 14)}...</Link>}
+            render={t =>
+              t && <Link to={`/tx/${t}`}>{t.substring(0, 14)}...</Link>
+            }
           />
           <Column
             title="Block"
             dataIndex="blockNumber"
             key="blockNumber"
-            render={t => <Link to={`/block/${t}`}>{t}</Link>}
+            render={t => t && <Link to={`/block/${t}`}>{t}</Link>}
           />
           <Column
             title="From"
             dataIndex="from"
             key="from"
-            render={t => (
-              <Link to={`/address/${t}`}>{t.substring(0, 14)}...</Link>
-            )}
+            render={t =>
+              t && <Link to={`/address/${t}`}>{t.substring(0, 14)}...</Link>
+            }
           />
           <Column
             title="To"
             dataIndex="to"
             key="to"
-            render={t => (
-              <Link to={`/address/${t}`}>{t.substring(0, 14)}...</Link>
-            )}
+            render={t =>
+              t && <Link to={`/address/${t}`}>{t.substring(0, 14)}...</Link>
+            }
           />
           <Column
             title="Value"
