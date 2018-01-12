@@ -38,7 +38,7 @@ class TransactionsTable extends React.Component {
             dataIndex="from"
             key="from"
             render={t => (
-              <Link to={`/address/${t}`}>{t.substring(0, 14)}...</Link>
+              <Link to={`/address/${t}`}>{t && t.substring(0, 14)}...</Link>
             )}
           />
           <Column
@@ -46,7 +46,7 @@ class TransactionsTable extends React.Component {
             dataIndex="to"
             key="to"
             render={t => (
-              <Link to={`/address/${t}`}>{t.substring(0, 14)}...</Link>
+              <Link to={`/address/${t}`}>{t && t.substring(0, 14)}...</Link>
             )}
           />
           <Column

@@ -19,7 +19,7 @@ import {
   RECEIVE_ADDRESS_IN_PAGE,
   CLEAR_SEARCH_QUERY,
   UPDATE_SEARCH_QUERY,
-  INVALID_SEARCH_QUERY,
+  INVALID_SEARCH_QUERY
 } from "../actions";
 
 // transaction data
@@ -77,21 +77,25 @@ function blocks(
       return {
         ...state,
         blocksAreFetching: true,
-        pageOfBlocks: action.blockNumbers.map((blockNumber) => {
-          return { blockNumber, blockIsFetching: true, block: null }
+        pageOfBlocks: action.blockNumbers.map(blockNumber => {
+          return { blockNumber, blockIsFetching: true, block: null };
         })
       };
     case RECEIVE_PAGE_OF_BLOCKS:
       return { ...state, blocksAreFetching: false };
     case RECEIVE_BLOCK_IN_PAGE:
       const blockIndex = state.pageOfBlocks.findIndex(block => {
-        return block.blockNumber === action.blockNumber
+        return block.blockNumber === action.blockNumber;
       });
       return {
         ...state,
         pageOfBlocks: [
           ...state.pageOfBlocks.slice(0, blockIndex),
-          { blockNumber: action.blockNumber, blockIsFetching: false, block: action.block },
+          {
+            blockNumber: action.blockNumber,
+            blockIsFetching: false,
+            block: action.block
+          },
           ...state.pageOfBlocks.slice(blockIndex + 1)
         ]
       };
@@ -109,22 +113,22 @@ function addresses(
     address: null,
     addressTransactions: [],
     pageOfAddresses: [],
-    lastAddressId: null,
+    lastAddressId: null
   },
   action
 ) {
-  switch(action.type) {
+  switch (action.type) {
     case REQUEST_ADDRESS:
       return {
         ...state,
-        addressIsFetching: true,
+        addressIsFetching: true
       };
     case RECEIVE_ADDRESS:
       return {
         ...state,
         addressIsFetching: false,
         address: action.address,
-        isContract: action.address.code !== '0x'
+        isContract: action.address.code !== "0x"
       };
     case REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS:
       return {
@@ -141,24 +145,29 @@ function addresses(
       return {
         ...state,
         addressesAreFetching: true,
-        pageOfAddresses: action.addressIds.map((addressId) => {
-          return { addressId, addressIsFetching: true, address: null }
+        pageOfAddresses: action.addressIds.map(addressId => {
+          return { addressId, addressIsFetching: true, address: null };
         })
       };
     case RECEIVE_PAGE_OF_ADDRESSES:
       return { ...state, addressesAreFetching: false };
     case RECEIVE_ADDRESS_IN_PAGE:
       const addressIndex = state.pageOfAddresses.findIndex(address => {
-        return address.addressId === action.addressId
+        return address.addressId === action.addressId;
       });
       return {
         ...state,
         pageOfAddresses: [
           ...state.pageOfAddresses.slice(0, addressIndex),
-          { addressId: action.addressId, addressIsFetching: false, address: action.address, isContract: action.address.code !== '0x' },
+          {
+            addressId: action.addressId,
+            addressIsFetching: false,
+            address: action.address
+          },
           ...state.pageOfAddresses.slice(addressIndex + 1)
         ],
-        lastAddressId: state.pageOfAddresses[state.pageOfAddresses.length - 1].addressId
+        lastAddressId:
+          state.pageOfAddresses[state.pageOfAddresses.length - 1].addressId
       };
     default:
       return state;
@@ -167,25 +176,25 @@ function addresses(
 
 // site search
 
-function search(state={ query: "", validQuery: true}, action) {
-  switch(action.type) {
+function search(state = { query: "", validQuery: true }, action) {
+  switch (action.type) {
     case UPDATE_SEARCH_QUERY:
       return {
         ...state,
         query: action.query,
         validQuery: true
-      }
+      };
     case CLEAR_SEARCH_QUERY:
       return {
         ...state,
         query: "",
         validQuery: true
-      }
+      };
     case INVALID_SEARCH_QUERY:
       return {
         ...state,
         validQuery: false
-      }
+      };
     default:
       return state;
   }
