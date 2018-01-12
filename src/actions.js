@@ -31,7 +31,7 @@ export const RECEIVE_ADDRESS_IN_PAGE = "RECEIVE_ADDRESS_IN_PAGE";
 export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
 export const UPDATE_SEARCH_QUERY = "UPDATE_SEARCH_QUERY";
 export const INVALID_SEARCH_QUERY = "INVALID_SEARCH_QUERY";
-const NODE = "http://node.blockfront.io:8545";
+const NODE = "http://secondary.node.blockfront.io:8545";
 
 // TODO: set this dynamically
 const web3 = new Web3(new Web3.providers.HttpProvider(NODE));
