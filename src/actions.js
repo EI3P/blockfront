@@ -22,6 +22,8 @@ export const REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS =
 export const RECEIVE_PAGE_OF_ADDRESS_TRANSACTIONS =
   "RECEIVE_PAGE_OF_ADDRESS_TRANSACTIONS";
 export const REQUEST_PAGE_OF_ADDRESSES = "REQUEST_PAGE_OF_ADDRESSES";
+export const REQUEST_ADDRESS_TRACES = "REQUEST_ADDRESS_TRACES";
+export const RECEIVE_ADDRESS_TRACES = "RECEIVE_ADDRESS_TRACES";
 export const RECEIVE_PAGE_OF_ADDRESSES = "RECEIVE_PAGE_OF_ADDRESSES";
 export const RECEIVE_ADDRESS_IN_PAGE = "RECEIVE_ADDRESS_IN_PAGE";
 
@@ -29,7 +31,6 @@ export const RECEIVE_ADDRESS_IN_PAGE = "RECEIVE_ADDRESS_IN_PAGE";
 export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
 export const UPDATE_SEARCH_QUERY = "UPDATE_SEARCH_QUERY";
 export const INVALID_SEARCH_QUERY = "INVALID_SEARCH_QUERY";
-
 const NODE = "http://node.blockfront.io:8545";
 
 // TODO: set this dynamically
@@ -204,6 +205,40 @@ export function receiveAddress(address) {
   return {
     type: RECEIVE_ADDRESS,
     address
+  };
+}
+
+export function requestAddressTraces() {
+  return {
+    type: REQUEST_ADDRESS_TRACES
+  };
+}
+
+export function fetchAddressTraces(address, fromBlock, toBlock) {
+  return function(dispatch) {
+    dispatch(requestAddressTraces());
+
+    return fetch(NODE, {
+      method: "POST",
+      body: JSON.stringify({
+        method: "trace_filter",
+        params: [
+          { toAddress: [address], fromBlock: "earliest", toBlock: "latest" }
+        ],
+        id: 1,
+        jsonrpc: "2.0"
+      }),
+      headers: { "Content-Type": "application/json" }
+    })
+      .then(res => res.json())
+      .then(traces => console.log(traces));
+  };
+}
+
+export function receiveAddressTraces(addressTraces) {
+  return {
+    type: RECEIVE_ADDRESS_TRACES,
+    addressTraces
   };
 }
 

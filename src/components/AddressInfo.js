@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Web3 from "web3";
-import { Card, Tag, Icon } from "antd";
+import { Card, Icon } from "antd";
 import TransactionsTable from "./TransactionsTable";
 import { formatData } from "../util";
 const web3 = new Web3();
@@ -19,21 +19,25 @@ class AddressInfo extends React.Component {
     const icon =
       address &&
       (address.code !== "0x" ? <Icon type="code" /> : <Icon type="wallet" />);
+    const addressType =
+      address && (address.code !== "0x" ? "Contract" : "Account");
     const title = (
       <span>
-        {icon} {addressId}
+        {icon} {addressType} {addressId}
       </span>
     );
     return (
       <Card title={title} loading={addressLoading}>
-        <h3>Account Name</h3>
+        <h3>Address Hash</h3>
+        <h4>{addressId}</h4>
+        <h3>Address Name</h3>
         <h4>Unknown</h4>
         <h3>ETH Balance</h3>
         <h4>{address && web3.utils.fromWei(address.balance)} ETH</h4>
         <h3>USD Balance</h3>
         <h4>$X.XX USD</h4>
         <h3>Address Type</h3>
-        <h4>{address && (address.code !== "0x" ? "Contract" : "Account")}</h4>
+        <h4>{addressType}</h4>
         <h3>Address Code</h3>
         <pre>{address && formatData(address.code).join("\n")}</pre>
         <br />
@@ -49,7 +53,7 @@ class AddressInfo extends React.Component {
 
 AddressInfo.propTypes = {
   address: PropTypes.object,
-  addressId: PropTypes.string.required,
+  addressId: PropTypes.string.isRequired,
   addressLoading: PropTypes.bool,
   transactions: PropTypes.array,
   transactionsLoading: PropTypes.bool

@@ -14,6 +14,8 @@ import {
   RECEIVE_ADDRESS,
   REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS,
   RECEIVE_PAGE_OF_ADDRESS_TRANSACTIONS,
+  REQUEST_ADDRESS_TRACES,
+  RECEIVE_ADDRESS_TRACES,
   REQUEST_PAGE_OF_ADDRESSES,
   RECEIVE_PAGE_OF_ADDRESSES,
   RECEIVE_ADDRESS_IN_PAGE,
@@ -110,6 +112,8 @@ function addresses(
     addressIsFetching: true,
     addressesAreFetching: true,
     addressTransactionsAreFetching: true,
+    addressTracesAreFetching: true,
+    addressTraces: [],
     address: null,
     addressTransactions: [],
     pageOfAddresses: [],
@@ -129,6 +133,17 @@ function addresses(
         addressIsFetching: false,
         address: action.address,
         isContract: action.address.code !== "0x"
+      };
+    case REQUEST_ADDRESS_TRACES:
+      return {
+        ...state,
+        addressTracesAreFetching: true
+      };
+    case RECEIVE_ADDRESS_TRACES:
+      return {
+        ...state,
+        addressTracesAreFetching: false,
+        addressTraces: action.addressTraces
       };
     case REQUEST_PAGE_OF_ADDRESS_TRANSACTIONS:
       return {

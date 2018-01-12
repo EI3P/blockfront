@@ -3,9 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AddressInfo from "./AddressInfo";
-import AddressInfoTxns from "./AddressInfoTxns";
 import { fetchAddress, fetchPageOfAddressTransactions } from "../actions";
-import { Card, Tag } from "antd";
 import store from "../store";
 
 class Address extends React.Component {
