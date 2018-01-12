@@ -15,6 +15,7 @@ import NodeSelector from "./components/NodeSelector";
 import store, { history } from "./store";
 import { Layout, Row, Col } from "antd";
 import "antd/dist/antd.css";
+import "ant-design-pro/dist/ant-design-pro.css";
 import glamorous from "glamorous";
 
 const ResponsiveHeaderWrapper = glamorous.div({
@@ -40,7 +41,6 @@ class App extends Component {
                   <Col sm={24} md={12}>
                     <SearchBar />
                   </Col>
-
                 </Row>
               </Layout.Header>
               <Route exact path="/" component={Home} />
