@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import AddressSummary from "./AddressSummary";
 import { Table, Card, Tag } from "antd";
 import { Link } from "react-router-dom";
 import Web3 from "web3";

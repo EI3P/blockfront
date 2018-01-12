@@ -5,24 +5,33 @@ import PropTypes from "prop-types";
 import AddressInfo from "./AddressInfo";
 import AddressInfoTxns from "./AddressInfoTxns";
 import { fetchAddress, fetchPageOfAddressTransactions } from "../actions";
+import { Card, Tag } from "antd";
 import store from "../store";
-
 
 class Address extends React.Component {
   componentDidMount() {
     store.dispatch(fetchAddress(this.props.addressId));
-    store.dispatch(fetchPageOfAddressTransactions(this.props.addressId, this.getPageNumber()));
+    store.dispatch(
+      fetchPageOfAddressTransactions(this.props.addressId, this.getPageNumber())
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.location.pathname !== nextProps.location.pathname) {
       store.dispatch(fetchAddress(nextProps.addressId));
-      store.dispatch(fetchPageOfAddressTransactions(nextProps.addressId, this.getPageNumber()));
+      store.dispatch(
+        fetchPageOfAddressTransactions(
+          nextProps.addressId,
+          this.getPageNumber()
+        )
+      );
     }
   }
 
   getPageNumber() {
-    const queryString = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    const queryString = qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true
+    });
     return queryString.page || 0;
   }
 
@@ -32,13 +41,18 @@ class Address extends React.Component {
       addressTransactionsAreFetching,
       address,
       addressTransactions,
-      isContract
+      addressId
     } = this.props;
 
     return (
       <div>
-        <div>{addressIsFetching ? <p>Fetching address...</p> : <AddressInfo address={address} isContract={isContract} />}</div>
-        <div>{addressTransactionsAreFetching ? <p>Fetching address transactions...</p> : <AddressInfoTxns addressTransactions={addressTransactions} />}</div>
+        <AddressInfo
+          address={address}
+          addressId={addressId}
+          addressLoading={addressIsFetching}
+          transactions={addressTransactions}
+          transactionsLoading={addressTransactionsAreFetching}
+        />
       </div>
     );
   }
@@ -49,18 +63,17 @@ Address.propTypes = {
   addressIsFetching: PropTypes.bool,
   addressTransactionsAreFetching: PropTypes.bool,
   address: PropTypes.object,
-  addressTransactions: PropTypes.array,
-  isContract: PropTypes.bool
+  addressTransactions: PropTypes.array
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
     addressId: ownProps.match.params.addressId,
     addressIsFetching: state.addresses.addressIsFetching,
-    addressTransactionsAreFetching: state.addresses.addressTransactionsAreFetching,
+    addressTransactionsAreFetching:
+      state.addresses.addressTransactionsAreFetching,
     address: state.addresses.address,
-    addressTransactions: state.addresses.addressTransactions,
-    isContract: state.addresses.isContract
+    addressTransactions: state.addresses.addressTransactions
   };
 };
 
