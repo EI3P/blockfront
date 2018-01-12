@@ -11,6 +11,7 @@ import Address from "./components/Address";
 import Addresses from "./components/Addresses";
 import HeaderMenu from "./components/HeaderMenu";
 import SearchBar from "./components/SearchBar";
+import NodeSelector from "./components/NodeSelector";
 import store, { history } from "./store";
 import { Layout, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
@@ -51,6 +52,7 @@ class App extends Component {
                   <Col sm={24} md={12}>
                     <SearchBar />
                   </Col>
+
                 </Row>
               </Layout.Header>
               <Route exact path="/" component={Home} />
@@ -60,7 +62,16 @@ class App extends Component {
               <Route path="/block/:blockNumber" component={Block} />
               <Route exact path="/address" component={Addresses} />
               <Route path="/address/:addressId" component={Address} />
-              <Layout.Footer>Blockfront 2018</Layout.Footer>
+              <Layout.Footer>
+                <Row>
+                  <Col sm={24} md={12}>
+                    Blockfront 2018
+                  </Col>
+                  <Col sm={24} md={12}>
+                    <NodeSelector />
+                  </Col>
+                </Row>
+              </Layout.Footer>
             </Layout>
           </ResponsiveHeaderWrapper>
         </ConnectedRouter>

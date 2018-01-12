@@ -28,10 +28,9 @@ export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
 export const UPDATE_SEARCH_QUERY = "UPDATE_SEARCH_QUERY";
 export const INVALID_SEARCH_QUERY = "INVALID_SEARCH_QUERY";
 
-const NODE = "http://node.blockfront.io:8545";
+// Nodes
+export const UPDATE_CURRENT_NODE = "UPDATE_CURRENT_NODE";
 
-// TODO: set this dynamically
-const web3 = new Web3(new Web3.providers.HttpProvider(NODE));
 
 export function requestTransaction(id) {
   return {
@@ -51,13 +50,15 @@ export function receiveTransaction(id, transaction, transactionReceipt, transact
 }
 
 export function fetchTransaction(id) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestTransaction(id));
     return Promise.all([
       web3.eth.getTransaction(id),
       web3.eth.getTransactionReceipt(id),
       fetch(
-        NODE,
+        nodes.current,
         {
           method: "POST",
           body: JSON.stringify({
@@ -91,7 +92,9 @@ export function receiveTransactionsForBlock(id, transactions) {
 }
 
 export function fetchTransactionsForBlock(id = "latest") {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestTransactionsForBlock(id));
     return web3.eth.getBlock(id, true).then(block => {
       dispatch(receiveTransactionsForBlock(id, block.transactions));
@@ -100,7 +103,9 @@ export function fetchTransactionsForBlock(id = "latest") {
 }
 
 export function fetchBlock(blockNumber) {
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestBlock(blockNumber));
     return web3.eth.getBlock(blockNumber, true).then(block => {
       dispatch(receiveBlock(blockNumber, block));
@@ -124,7 +129,9 @@ export function receiveBlock(blockNumber, block) {
 }
 
 export function fetchPageOfBlocks(pageNumber) {
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     return web3.eth.getBlock("latest", false).then(block => {
       const PAGE_SIZE = 5;
       const highBlockNumber = block.number - pageNumber * PAGE_SIZE;
@@ -167,7 +174,9 @@ export function receiveBlockInPage(blockNumber, block) {
 }
 
 export function fetchAddress(addressId) {
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestAddress());
     return Promise.all([
       web3.eth.getBalance(addressId, "latest"),
@@ -198,7 +207,10 @@ export function receiveAddress(address) {
 export function fetchPageOfAddressTransactions(addressId, pageNumber) {
   const PAGE_SIZE = 5;
 
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
+
     dispatch(requestPageOfAddressTransactions());
 
     return web3.eth.getBlock("latest", false).then(block => {
@@ -233,9 +245,12 @@ export function receivePageOfAddressTransactions(addressTransactions) {
 export function fetchPageOfAddresses(lastAddressId) {
   const PAGE_SIZE = 5;
 
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
+
     return fetch(
-      NODE,
+      nodes.current,
       {
         method: "POST",
         body: JSON.stringify({
@@ -308,5 +323,12 @@ export function updateSearchQuery(query) {
 export function invalidSearchQuery() {
   return {
     type: INVALID_SEARCH_QUERY,
+  }
+}
+
+export function updateCurrentNode(nextNode) {
+  return {
+    type: UPDATE_CURRENT_NODE,
+    nextNode
   }
 }
