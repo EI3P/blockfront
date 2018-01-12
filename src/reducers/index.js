@@ -218,11 +218,13 @@ function search(state = { query: "", validQuery: true }, action) {
 
 // node mgmt
 function nodes(state={
-  current: "http://node.blockfront.io:8545",
+  current: "http://secondary.node.blockfront.io:8545",
   available: [
     "http://node.blockfront.io:8545",
     "http://primary.node.blockfront.io:8545",
-    "http://secondary.node.blockfront.io:8545"
+    "http://secondary.node.blockfront.io:8545",
+    "https://api.myetherapi.com/eth",
+    "https://api.myetherapi.com/rop",
   ]
 }, action) {
   switch (action.type) {
