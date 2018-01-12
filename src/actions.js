@@ -292,9 +292,7 @@ export function receivePageOfAddressTransactions(addressTransactions) {
   };
 }
 
-export function fetchPageOfAddresses(lastAddressId) {
-  const PAGE_SIZE = 5;
-
+export function fetchPageOfAddresses(lastAddressId, pageSize=10) {
   return function (dispatch, getState) {
     const { nodes } = getState();
     const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
@@ -305,7 +303,7 @@ export function fetchPageOfAddresses(lastAddressId) {
         method: "POST",
         body: JSON.stringify({
           "method":"parity_listAccounts",
-          "params": [PAGE_SIZE, lastAddressId],
+          "params": [pageSize, lastAddressId],
           "id": 1,
           "jsonrpc": "2.0"
         }),
@@ -320,7 +318,7 @@ export function fetchPageOfAddresses(lastAddressId) {
         return Promise.all([
           web3.eth.getBalance(addressId, "latest"),
           web3.eth.getCode(addressId, "latest"),
-          web3.eth.getTransactionCount(addressId, "latest")
+          web3.eth.getTransactionCount(addressId, "latest") // XXX: probably not actually ALL txs
         ]).then(([balance, code, transactionCount]) => {
           dispatch(receiveAddressInPage(addressId, {
             addressId,
@@ -330,7 +328,9 @@ export function fetchPageOfAddresses(lastAddressId) {
           }));
         });
       }));
-    })
+    }).then(() => {
+      dispatch(receivePageOfAddresses());
+    });
   }
 }
 
