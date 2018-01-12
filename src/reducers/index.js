@@ -21,7 +21,8 @@ import {
   RECEIVE_ADDRESS_IN_PAGE,
   CLEAR_SEARCH_QUERY,
   UPDATE_SEARCH_QUERY,
-  INVALID_SEARCH_QUERY
+  INVALID_SEARCH_QUERY,
+  UPDATE_CURRENT_NODE,
 } from "../actions";
 
 // transaction data
@@ -215,10 +216,30 @@ function search(state = { query: "", validQuery: true }, action) {
   }
 }
 
+// node mgmt
+function nodes(state={
+  current: "http://secondary.node.blockfront.io:8545",
+  available: [
+    "http://node.blockfront.io:8545",
+    "http://primary.node.blockfront.io:8545",
+    "http://secondary.node.blockfront.io:8545",
+    "https://api.myetherapi.com/eth",
+    "https://api.myetherapi.com/rop",
+  ]
+}, action) {
+  switch (action.type) {
+    case UPDATE_CURRENT_NODE:
+      return { ...state, current: action.nextNode }
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   routing: routerReducer,
   addresses,
   blocks,
   transactions,
-  search
+  search,
+  nodes,
 });

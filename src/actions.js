@@ -31,10 +31,9 @@ export const RECEIVE_ADDRESS_IN_PAGE = "RECEIVE_ADDRESS_IN_PAGE";
 export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
 export const UPDATE_SEARCH_QUERY = "UPDATE_SEARCH_QUERY";
 export const INVALID_SEARCH_QUERY = "INVALID_SEARCH_QUERY";
-const NODE = "http://secondary.node.blockfront.io:8545";
 
-// TODO: set this dynamically
-const web3 = new Web3(new Web3.providers.HttpProvider(NODE));
+// Nodes
+export const UPDATE_CURRENT_NODE = "UPDATE_CURRENT_NODE";
 
 export function requestTransaction(id) {
   return {
@@ -59,23 +58,26 @@ export function receiveTransaction(
 }
 
 export function fetchTransaction(id) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestTransaction(id));
     return Promise.all([
       web3.eth.getTransaction(id),
       web3.eth.getTransactionReceipt(id),
-      fetch(NODE, {
-        method: "POST",
-        body: JSON.stringify({
-          method: "trace_transaction",
-          params: [id],
-          id: 1,
-          jsonrpc: "2.0"
-        }),
-        headers: { "Content-Type": "application/json" }
-      })
-        .then(res => res.json())
-        .then(body => body.result)
+      fetch(
+        nodes.current,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            "method":"trace_transaction",
+            "params": [id],
+            "id": 1,
+            "jsonrpc": "2.0"
+          }),
+          headers: { "Content-Type": "application/json" }
+        }
+      ).then(res => res.json()).then(body => body.result)
     ]).then(([tx, txReceipt, txTrace]) => {
       dispatch(receiveTransaction(id, tx, txReceipt, txTrace));
     });
@@ -98,7 +100,9 @@ export function receiveTransactionsForBlock(id, transactions) {
 }
 
 export function fetchTransactionsForBlock(id = "latest") {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestTransactionsForBlock(id));
     return web3.eth.getBlock(id, true).then(block => {
       dispatch(receiveTransactionsForBlock(id, block.transactions));
@@ -107,7 +111,9 @@ export function fetchTransactionsForBlock(id = "latest") {
 }
 
 export function fetchBlock(blockNumber) {
-  return function(dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestBlock(blockNumber));
     return web3.eth.getBlock(blockNumber, true).then(block => {
       dispatch(receiveBlock(blockNumber, block));
@@ -131,7 +137,9 @@ export function receiveBlock(blockNumber, block) {
 }
 
 export function fetchPageOfBlocks(pageNumber) {
-  return function(dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     return web3.eth.getBlock("latest", false).then(block => {
       const PAGE_SIZE = 5;
       const highBlockNumber = block.number - pageNumber * PAGE_SIZE;
@@ -178,7 +186,9 @@ export function receiveBlockInPage(blockNumber, block) {
 }
 
 export function fetchAddress(addressId) {
-  return function(dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestAddress());
     return Promise.all([
       web3.eth.getBalance(addressId, "latest"),
@@ -215,10 +225,10 @@ export function requestAddressTraces() {
 }
 
 export function fetchAddressTraces(address, fromBlock, toBlock) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    const { nodes } = getState();
     dispatch(requestAddressTraces());
-
-    return fetch(NODE, {
+    return fetch(nodes.current, {
       method: "POST",
       body: JSON.stringify({
         method: "trace_filter",
@@ -245,7 +255,9 @@ export function receiveAddressTraces(addressTraces) {
 export function fetchPageOfAddressTransactions(addressId, pageNumber) {
   const PAGE_SIZE = 5;
 
-  return function(dispatch) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
     dispatch(requestPageOfAddressTransactions());
 
     return web3.eth.getBlock("latest", false).then(block => {
@@ -280,44 +292,46 @@ export function receivePageOfAddressTransactions(addressTransactions) {
   };
 }
 
-export function fetchPageOfAddresses(lastAddressId, pageSize = 10) {
-  return function(dispatch) {
-    return fetch(NODE, {
-      method: "POST",
-      body: JSON.stringify({
-        method: "parity_listAccounts",
-        params: [pageSize, lastAddressId],
-        id: 1,
-        jsonrpc: "2.0"
-      }),
-      headers: { "Content-Type": "application/json" }
-    })
-      .then(res => res.json())
-      .then(body => body.result)
-      .then(addressIds => {
-        dispatch(requestPageOfAddresses(addressIds));
-        return Promise.all(
-          addressIds.map(addressId => {
-            return Promise.all([
-              web3.eth.getBalance(addressId, "latest"),
-              web3.eth.getCode(addressId, "latest"),
-              web3.eth.getTransactionCount(addressId, "latest") // XXX: probably not actaully ALL transactions
-            ]).then(([balance, code, transactionCount]) => {
-              dispatch(
-                receiveAddressInPage(addressId, {
-                  addressId,
-                  balance,
-                  code,
-                  transactionCount
-                })
-              );
-            });
-          })
-        ).then(() => {
-          dispatch(receivePageOfAddresses());
+export function fetchPageOfAddresses(lastAddressId, pageSize=10) {
+  return function (dispatch, getState) {
+    const { nodes } = getState();
+    const web3 = new Web3(new Web3.providers.HttpProvider(nodes.current));
+
+    return fetch(
+      nodes.current,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          "method":"parity_listAccounts",
+          "params": [pageSize, lastAddressId],
+          "id": 1,
+          "jsonrpc": "2.0"
+        }),
+        headers: { "Content-Type": "application/json" }
+      }
+    )
+    .then(res => res.json())
+    .then(body => body.result)
+    .then((addressIds) => {
+      dispatch(requestPageOfAddresses(addressIds));
+      return Promise.all(addressIds.map((addressId) => {
+        return Promise.all([
+          web3.eth.getBalance(addressId, "latest"),
+          web3.eth.getCode(addressId, "latest"),
+          web3.eth.getTransactionCount(addressId, "latest") // XXX: probably not actually ALL txs
+        ]).then(([balance, code, transactionCount]) => {
+          dispatch(receiveAddressInPage(addressId, {
+            addressId,
+            balance,
+            code,
+            transactionCount
+          }));
         });
-      });
-  };
+      }));
+    }).then(() => {
+      dispatch(receivePageOfAddresses());
+    });
+  }
 }
 
 export function requestPageOfAddresses(addressIds) {
@@ -358,4 +372,11 @@ export function invalidSearchQuery() {
   return {
     type: INVALID_SEARCH_QUERY
   };
+}
+
+export function updateCurrentNode(nextNode) {
+  return {
+    type: UPDATE_CURRENT_NODE,
+    nextNode
+  }
 }
