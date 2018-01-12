@@ -23,7 +23,7 @@ class HeaderMenu extends Component {
           <Menu.Item key="0">
             <Link to="/">
               <b style={{color: '#fafafa'}}>
-                <Icon type="home" />
+                Blockfront
               </b>
             </Link>
           </Menu.Item>
