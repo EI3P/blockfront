@@ -9,6 +9,12 @@ class Transactions extends React.Component {
   componentDidMount() {
     store.dispatch(fetchTransactionsForBlock("latest"));
   }
+  
+  componentWillReceiveProps(nextProps) {
+    if (this.props.currentNode !== nextProps.currentNode) {
+      store.dispatch(fetchTransactionsForBlock("latest"))
+    }
+  }
 
   render() {
     const { transactions, txsAreFetching } = this.props;
@@ -26,12 +32,14 @@ class Transactions extends React.Component {
 Transactions.propTypes = {
   txsAreFetching: PropTypes.bool,
   transactions: PropTypes.array,
+  currentNode: PropTypes.string,
 };
 
 const mapStateToProps = state => {
   return {
     txsAreFetching: state.transactions.txsAreFetching,
-    transactions: state.transactions.transactions
+    transactions: state.transactions.transactions,
+    currentNode: state.nodes.current,
   };
 };
 

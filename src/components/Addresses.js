@@ -12,7 +12,9 @@ class Addresses extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.location.pathname !== nextProps.location.pathname) {
+    if ((this.props.location.pathname !== nextProps.location.pathname) ||
+      (this.props.currentNode !== nextProps.currentNode)
+    ) {
       store.dispatch(fetchPageOfAddresses(this.getLastAddress()));
     }
   }
@@ -38,13 +40,15 @@ class Addresses extends React.Component {
 
 Addresses.propTypes = {
   addressesAreFetching: PropTypes.bool,
-  addresses: PropTypes.array
+  addresses: PropTypes.array,
+  currentNode: PropTypes.string,
 };
 
 const mapStateToProps = state => {
   return {
     addressesAreFetching: state.addresses.addressesAreFetching,
-    addresses: state.addresses.pageOfAddresses
+    addresses: state.addresses.pageOfAddresses,
+    currentNode: state.nodes.current,
   };
 };
 

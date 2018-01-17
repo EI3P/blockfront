@@ -36,6 +36,7 @@ Transaction.propTypes = {
   txFetching: PropTypes.bool,
   txReceipt: PropTypes.object,
   txTrace: PropTypes.arrayOf(PropTypes.object),
+  currentNode: PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -44,7 +45,8 @@ const mapStateToProps = (state, ownProps) => {
     txInfo: state.transactions.transaction,
     txFetching: state.transactions.txIsFetching,
     txReceipt: state.transactions.transactionReceipt,
-    txTrace: state.transactions.transactionTrace
+    txTrace: state.transactions.transactionTrace,
+    currentNode: state.nodes.current,
   };
 };
 

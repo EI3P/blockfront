@@ -11,6 +11,7 @@ import Address from "./components/Address";
 import Addresses from "./components/Addresses";
 import HeaderMenu from "./components/HeaderMenu";
 import SearchBar from "./components/SearchBar";
+import NodeStatus from "./components/NodeStatus";
 import NodeSelector from "./components/NodeSelector";
 import store, { history } from "./store";
 import { Layout, Row, Col } from "antd";
@@ -34,13 +35,15 @@ class App extends Component {
             <Layout className="App">
               <Layout.Header className="App-header">
                 <Row>
-                  <Col sm={24} md={12}>
+                  <Col sm={16} md={8}>
                     <HeaderMenu />
                   </Col>
-                  <Col sm={24} md={12}>
+                  <Col sm={16} md={8}>
+                    <NodeStatus />
+                  </Col>
+                  <Col sm={16} md={8}>
                     <SearchBar />
                   </Col>
-
                 </Row>
               </Layout.Header>
               <Route exact path="/" component={Home} />
