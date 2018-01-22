@@ -15,7 +15,8 @@ class Address extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.location.pathname !== nextProps.location.pathname) {
+    if ((this.props.location.pathname !== nextProps.location.pathname)
+      || (this.props.currentNode !== nextProps.currentNode)) {
       store.dispatch(fetchAddress(nextProps.addressId));
       store.dispatch(
         fetchPageOfAddressTransactions(
@@ -61,7 +62,8 @@ Address.propTypes = {
   addressIsFetching: PropTypes.bool,
   addressTransactionsAreFetching: PropTypes.bool,
   address: PropTypes.object,
-  addressTransactions: PropTypes.array
+  addressTransactions: PropTypes.array,
+  currentNode: PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -71,7 +73,8 @@ const mapStateToProps = (state, ownProps) => {
     addressTransactionsAreFetching:
       state.addresses.addressTransactionsAreFetching,
     address: state.addresses.address,
-    addressTransactions: state.addresses.addressTransactions
+    addressTransactions: state.addresses.addressTransactions,
+    currentNode: state.nodes.current,
   };
 };
 

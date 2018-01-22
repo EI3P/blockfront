@@ -13,7 +13,9 @@ class Blocks extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.location.pathname !== nextProps.location.pathname) {
+    if ((this.props.location.pathname !== nextProps.location.pathname) ||
+      (this.props.currentNode !== nextProps.currentNode)
+    ) {
       store.dispatch(fetchPageOfBlocks(this.getPageNumber()));
     }
   }
@@ -49,13 +51,15 @@ class Blocks extends React.Component {
 
 Blocks.propTypes = {
   blocksAreFetching: PropTypes.bool,
-  blocks: PropTypes.array
+  blocks: PropTypes.array,
+  currentNode: PropTypes.string,
 }
 
 const mapStateToProps = state => {
   return {
     blocksAreFetching: state.blocks.blocksAreFetching,
-    blocks: state.blocks.pageOfBlocks
+    blocks: state.blocks.pageOfBlocks,
+    currentNode: state.nodes.current,
   };
 };
 
